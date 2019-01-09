@@ -1,0 +1,105 @@
+﻿<UserControl x:Class="JHoney_ImageConverter.View.ImageDetectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JHoney_ImageConverter.View"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vc="clr-namespace:JHoney_ImageConverter.Converter"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+             Visibility="{Binding Visibility}"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        
+        <!--이미지뷰패널-->
+        <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Canvas x:Name="MainCanvas" Background="{Binding ImageShow.ImageBrush}" Width="{Binding Background.ImageSource.Width, ElementName=MainCanvas, Mode=OneWay}" Height="{Binding Background.ImageSource.Height, ElementName=MainCanvas, Mode=OneWay}" AllowDrop="True">
+                <Canvas.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="{Binding ImageShow.ImageBrushScaleX}" ScaleY="{Binding ImageShow.ImageBrushScaleY}"></ScaleTransform>
+                    </TransformGroup>
+                </Canvas.LayoutTransform>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Loaded">
+                        <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=MainCanvas, Mode=OneWay}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseUp">
+                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseDown">
+                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Drop">
+                        <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseWheel">
+                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Canvas.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding CanvasContext}" CommandParameter="Normal" Header="Normal" IsChecked="{Binding IsSelectNormal}" />
+                        <MenuItem Command="{Binding CanvasContext}" CommandParameter="SetROI" Header="SetROI" IsCheckable="True" IsChecked="{Binding IsSelectRectangle}"/>
+                    </ContextMenu>
+                </Canvas.ContextMenu>
+                <Rectangle Stroke="Red" RenderTransformOrigin="0.5,0.5" StrokeThickness="5" Width="{Binding RectWidth}" Height="{Binding RectHeight}" Visibility="{Binding IsSelectRectangle, Converter={vc:BoolenToVisibilityConverter}}" >
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform X="{Binding StartRectPointX}" Y="{Binding StartRectPointY}"/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+            </Canvas>
+        </ScrollViewer>
+
+        <!--컨트롤패널-->
+        <GroupBox Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Header="Detect Options" Margin="5">
+            <StackPanel Orientation="Vertical" Margin="5">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <!--WorkList-->
+                    <ItemsControl x:Name="itemsControl" ItemsSource="{Binding WorkList}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Content="{Binding .Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" >
+                                    <!--<i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Checked">
+                                            <cmd:EventToCommand Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>-->
+                                </RadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Button x:Name="DummyBtn" Command="{Binding CommandConvertSelect}" Visibility="Collapsed" />
+                </StackPanel>
+                <Grid>
+                    
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+        
+    </Grid>
+</UserControl>

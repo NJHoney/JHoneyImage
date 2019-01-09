@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="JHoney_ImageConverter.Util.Loading.View.ProgressLoadingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JHoney_ImageConverter.Util.Loading.View"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             Visibility="{Binding Visibility}"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="White">
+        <Grid Background="Black" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style x:Key="panelMessageText" TargetType="{x:Type TextBlock}">
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="Margin" Value="0,11,0,0" />
+                    <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="25" />
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="FontFamily" Value="Arial" />
+                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                </Style>
+
+                <Style x:Key="panelSubMessageText" TargetType="{x:Type TextBlock}">
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="Margin" Value="0,5" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="FontFamily" Value="Arial" />
+                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                </Style>
+
+
+            </Grid.Resources>
+
+
+            <Controls:ProgressRing HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Margin="20" />
+
+            <StackPanel VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Width="200">
+                <TextBlock x:Name="txtMessage"
+                 Style="{StaticResource panelMessageText}" 
+                 Text="{Binding LoadingText}" 
+                 Foreground="White" />
+
+                <TextBlock x:Name="txtSubMessage"
+                 Style="{StaticResource panelSubMessageText}" 
+                 Text="{Binding SubMessageText}" 
+                 Foreground="#FFA1C3D2" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+                <TextBlock Text="{Binding Value, ElementName=progressBar}" Foreground="White" Margin="3" />
+                <TextBlock Text=" / " Foreground="White" Margin="3" />
+                <TextBlock Text="{Binding Maximum, ElementName=progressBar}" Foreground="White" Margin="3" />
+            </StackPanel>
+            <ProgressBar x:Name="progressBar" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Height="12" HorizontalContentAlignment="Stretch" Minimum="{Binding ProgressMin}" Maximum="{Binding ProgressMax}" Value="{Binding ProgressCurrent}" Margin="10"/>
+        </Grid>
+    </Grid>
+</UserControl>

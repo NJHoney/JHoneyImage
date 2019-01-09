@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="JHoney_ImageConverter.View.ImageMuiltConvertView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JHoney_ImageConverter.View"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+             xmlns:vc="clr-namespace:JHoney_ImageConverter.Converter"
+             Visibility="{Binding Visibility}"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" Header="Work Setting" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <!--WorkList-->
+                <ItemsControl x:Name="itemsControl" Grid.Row="0" ItemsSource="{Binding WorkList}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <RadioButton Content="{Binding .Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" >
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Checked">
+                                        <cmd:EventToCommand Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
+                            </RadioButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button x:Name="DummyBtn" Command="{Binding CommandConvertSelect}" Visibility="Collapsed" />
+
+                <!--WorkParameter-->
+                <GroupBox Grid.Row="1" Header="Parameter Setting">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="{Binding ParamText1}" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility1, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBox Width="40" Margin="5" Text="{Binding Param1}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility1, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBlock Text="{Binding ParamText2}" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility2, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBox Width="40" Margin="5" Text="{Binding Param2}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility2, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBlock Text="{Binding ParamText3}" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility3, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBox Width="40" Margin="5" Text="{Binding Param3}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility3, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBlock Text="{Binding ParamText4}" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility4, Converter={vc:BoolenToVisibilityConverter}}" />
+                        <TextBox Width="40" Margin="5" Text="{Binding Param4}" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding ParamVisibility4, Converter={vc:BoolenToVisibilityConverter}}" />
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1" Header="Work List" Margin="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <DataGrid x:Name="dataGrid" ItemsSource="{Binding ConvertCommandList}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding .ConvertCommandName}" Header="Name" IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding .ParamList[0]}" Header="Param1" />
+                        <DataGridTextColumn Binding="{Binding .ParamList[1]}" Header="Param2" />
+                        <DataGridTextColumn Binding="{Binding .ParamList[2]}" Header="Param3" />
+                        <DataGridTextColumn Binding="{Binding .ParamList[3]}" Header="Param4" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                    <Button Height="40" Content="Add" Command="{Binding AddCommand}" CommandParameter="{Binding ItemsSource, ElementName=itemsControl}" Margin="5" />
+                    <Button Height="40" Content="Del" Command="{Binding DelCommand}" CommandParameter="{Binding SelectedIndex, ElementName=dataGrid}" Margin="5" />
+                    <Button Height="40" Content="Start" Command="{Binding CommandRun}" Margin="5" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

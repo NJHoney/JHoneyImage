@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JHoney_ImageConverter", "JHoney_ImageConverter\JHoney_ImageConverter.csproj", "{67D8A350-D2E8-4DF6-ACAB-550D5134194C}"
+EndProject
+Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "JHoneyImage-Setup", "JHoneyImage-Setup\JHoneyImage-Setup.isproj", "{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}"
+	ProjectSection(ProjectDependencies) = postProject
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C} = {67D8A350-D2E8-4DF6-ACAB-550D5134194C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CD_ROM|Any CPU = CD_ROM|Any CPU
+		CD_ROM|x64 = CD_ROM|x64
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		DVD-5|Any CPU = DVD-5|Any CPU
+		DVD-5|x64 = DVD-5|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		SingleImage|Any CPU = SingleImage|Any CPU
+		SingleImage|x64 = SingleImage|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.CD_ROM|x64.ActiveCfg = Release|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.CD_ROM|x64.Build.0 = Release|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Debug|x64.ActiveCfg = Debug|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Debug|x64.Build.0 = Debug|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.DVD-5|x64.ActiveCfg = Debug|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.DVD-5|x64.Build.0 = Debug|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Release|x64.ActiveCfg = Release|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.Release|x64.Build.0 = Release|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.SingleImage|x64.ActiveCfg = Release|x64
+		{67D8A350-D2E8-4DF6-ACAB-550D5134194C}.SingleImage|x64.Build.0 = Release|x64
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.CD_ROM|Any CPU.ActiveCfg = CD_ROM
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.CD_ROM|Any CPU.Build.0 = CD_ROM
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.CD_ROM|x64.ActiveCfg = CD_ROM
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.CD_ROM|x64.Build.0 = CD_ROM
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Debug|Any CPU.ActiveCfg = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Debug|Any CPU.Build.0 = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Debug|x64.ActiveCfg = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Debug|x64.Build.0 = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.DVD-5|Any CPU.ActiveCfg = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.DVD-5|Any CPU.Build.0 = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.DVD-5|x64.ActiveCfg = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.DVD-5|x64.Build.0 = DVD-5
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Release|Any CPU.ActiveCfg = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Release|Any CPU.Build.0 = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Release|x64.ActiveCfg = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.Release|x64.Build.0 = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.SingleImage|Any CPU.ActiveCfg = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.SingleImage|Any CPU.Build.0 = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.SingleImage|x64.ActiveCfg = SingleImage
+		{8FF76B96-3225-4B17-9DC7-8D2438D1CD09}.SingleImage|x64.Build.0 = SingleImage
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

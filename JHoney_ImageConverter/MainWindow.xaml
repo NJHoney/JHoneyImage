@@ -1,0 +1,124 @@
+﻿<Controls:MetroWindow x:Name="metroWindow" x:Class="JHoney_ImageConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JHoney_ImageConverter"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:View="clr-namespace:JHoney_ImageConverter.View"
+        xmlns:ViewModel="clr-namespace:JHoney_ImageConverter.ViewModel"
+        xmlns:LPanel="clr-namespace:JHoney_ImageConverter.Util.Loading.View"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        IsEnabled="{Binding IsEnabled}"
+        Dialog:DialogParticipation.Register="{Binding}"
+        mc:Ignorable="d"
+        UseNoneWindowStyle="True"
+        WindowState="Maximized"
+        Title="JHoney" Height="350" Width="525">
+    <Controls:MetroWindow.DataContext>
+        <ViewModel:MainWindowViewModel />
+    </Controls:MetroWindow.DataContext>
+    <Grid>
+        <!--로딩창-->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <LPanel:LoadingView DataContext="{Binding LoadingViewModel}" />
+            <LPanel:ProgressLoadingView DataContext="{Binding ProgressLoadingViewModel}" />
+        </Grid>
+        <!--메인뷰-->
+        <Grid Margin="20,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <!--Test-->
+            <View:ImageListView DataContext="{Binding ImageListViewModel}" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" />
+            
+            <!--뷰전환패널-->
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,5,5,5">
+                <StackPanel.Resources>
+                    <Style x:Key="AccentCircleButtonStyle"
+                           BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                           TargetType="{x:Type ButtonBase}">
+                        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Convert">
+                    <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageSnow" />
+                </Button>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
+                    <iconPacks:PackIconOcticons Width="20" Height="20" Kind="Search" />
+                </Button>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Difference">
+                    <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageMultiple" />
+                </Button>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="MuiltConvert">
+                    <iconPacks:PackIconModern Width="20" Height="20" Kind="SidebarLeftExpand" />
+                </Button>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Detect">
+                    <iconPacks:PackIconMaterial Width="20" Height="20" Kind="FileFind" />
+                </Button>
+            </StackPanel>
+            <!--Window컨트롤패널-->
+            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5" >
+                <StackPanel.Resources>
+                    <Style x:Key="AccentCircleButtonStyle" BasedOn="{StaticResource MahApps.Metro.Styles.MetroCircleButtonStyle}" TargetType="{x:Type ButtonBase}">
+                        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Width="50" Height="50" Margin="0,0,10,0" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding MenuSelectCommand}" CommandParameter="Setting" >
+                    <iconPacks:Entypo Width="35" Height="35" Kind="Cog" />
+                </Button>
+                <Button Command="{Binding CloseCommand}"  Width="50" Height="50" Style="{StaticResource AccentCircleButtonStyle}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" >
+                    <iconPacks:Entypo Width="25" Height="25" Kind="Cross" />
+                </Button>
+            </StackPanel>
+
+            <!--Test-->
+            <View:ImageConverterView DataContext="{Binding ImageConverterViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <View:ImagePatternMatchView DataContext="{Binding ImagePatternMatchViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <View:ImageDifferenceView DataContext="{Binding ImageDifferenceViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <View:ImageMuiltConvertView DataContext="{Binding ImageMuiltConvertViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <View:ImageDetectorView DataContext="{Binding ImageDetectorViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <!--로그-->
+
+        </Grid>
+    </Grid>
+    <!--<Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="MainFly">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Loaded">
+                    <cmd:EventToCommand Command="{Binding LoadFlyout}" PassEventArgsToCommand="True" CommandParameter="{Binding Flyouts, ElementName=window}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <Controls:Flyout x:Name="Password" Position="Left" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" IsOpen="True" >
+                <View:ImageListView DataContext="{Binding ImageListViewModel}" />
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>-->
+</Controls:MetroWindow>
