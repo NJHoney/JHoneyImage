@@ -35,6 +35,7 @@ namespace JHoney_ImageConverter.ViewModel
         public MedianBlur _medianBlur = new MedianBlur();
         public ErodeDilate _erodeDilate = new ErodeDilate();
         public Rotate _rotate = new Rotate();
+        public EdgePair _edgePair = new EdgePair();
         public Crop _crop = new Crop();
         public ChaangeImageBits _chaangeImageBits = new ChaangeImageBits();
         public Resize _resize = new Resize();
@@ -229,7 +230,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         public RelayCommand<MouseButtonEventArgs> CanvasEventMouseDown { get; private set; }
 
-
+        public RelayCommand<DragEventArgs> CommandDropFile { get; private set; }
         #endregion ---------------------------------------------------------------------------------
 
         public RelayCommand<object> CommandChangeSliderValue { get; private set; }
@@ -249,7 +250,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         void InitData()
         {
-            for (int iLoofCount = 0; iLoofCount < 5; iLoofCount++)
+            for (int iLoofCount = 0; iLoofCount < 6; iLoofCount++)
             {
                 TogleButtonEnabled.Add(true);
             }
@@ -265,6 +266,7 @@ namespace JHoney_ImageConverter.ViewModel
             CanvasContext = new RelayCommand<object>((param) => OnCanvasContext(param));
             CanvasEventMouseDown = new RelayCommand<MouseButtonEventArgs>((e) => OnCanvasEventMouseDown(e));
             CanvasEventMouseUp = new RelayCommand<MouseEventArgs>((e) => OnCanvasEventMouseUp(e));
+            CommandDropFile = new RelayCommand<DragEventArgs>((e) => OnCommandDropFile(e));
 
             CommandChangeSliderValue = new RelayCommand<object>((param) => OnCommandChangeSliderValue(param));
             CommandConfirmChange = new RelayCommand<object>((param) => OnCommandConfirmChange(param));
@@ -307,6 +309,57 @@ namespace JHoney_ImageConverter.ViewModel
             }
         }
 
+        private void OnCommandDropFile(DragEventArgs e)
+        {
+            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
+            {
+                if(file.Length>1)
+                {
+                    return;
+                }
+
+                File.Copy(file[0], tempImg, true);
+                UpdateImageInfo();
+
+                ImageShow.ImageSourceUpdate(tempImg, "ImageBrush");
+
+            }
+
+            DateTime TimeNow = DateTime.Now;
+            string TempName = TimeNow.Year +
+                                TimeNow.Month +
+                                TimeNow.Day + "-" +
+                                TimeNow.Hour +
+                                TimeNow.Minute +
+                                TimeNow.Second +
+                                TimeNow.Millisecond.ToString("D2");
+            if (IsSelectRectangle)
+            {
+
+                if (RectWidth < 2 || RectHeight < 2)
+                {
+                    TempMat.SaveImage(tempImgPath + TempName + ".png");
+                }
+                else
+                {
+                    Mat TempROIMat = TempMat.Clone(new OpenCvSharp.Rect(DPICaclSingle(StartRectPointX), DPICaclSingle(StartRectPointY), DPICaclSingle(RectWidth), DPICaclSingle(RectHeight)));
+                    TempROIMat.SaveImage(tempImgPath + TempName + ".png");
+                    TempROIMat.Dispose();
+                }
+            }
+            else
+            {
+                TempMat.SaveImage(tempImgPath + TempName + ".png");
+            }
+
+            //보내기
+            MessengerImageGetSet msgData2 = new MessengerImageGetSet("ToList", tempImgPath + TempName + ".png");
+            Messenger.Default.Send<MessengerImageGetSet>(msgData2);
+            
+
+        }
+
+       
         private void OnCanvasEventMouseWheel(MouseWheelEventArgs param)
         {
             if (ImageShow.ImageBrush.ImageSource == null)
@@ -607,6 +660,9 @@ namespace JHoney_ImageConverter.ViewModel
                 case "ToggleRotate":
                     _rotate.RotateFromMat(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
                     break;
+                case "ToggleEdge":
+                    //_edgePair.imgTobinary(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
+                    break;
             }
             ImageShow.ImageSourceUpdate(tempImgPath + "TempConverted.png", "ImageBrush");
 
@@ -723,6 +779,12 @@ namespace JHoney_ImageConverter.ViewModel
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 360;
                     TogleButtonEnabled[4] = true;
+                    break;
+                case "ToggleEdge":
+                    OptionParamText_01 = "Edge";
+                    OptionParamSlider_01_Min = 0;
+                    OptionParamSlider_01_Max = 255;
+                    TogleButtonEnabled[5] = true;
                     break;
             }
         }

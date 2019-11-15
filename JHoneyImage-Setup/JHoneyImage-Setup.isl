@@ -341,16 +341,10 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>Component</td><td>{9C857E52-3E50-481D-8845-AE312CC0F29C}</td><td>INSTALLDIR</td><td>2</td><td/><td>File</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT</td><td>{45A2D080-C72B-4BE6-95B3-DB94A996C2B0}</td><td>DLL</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT1</td><td>{F7A032F8-8C39-40D1-931E-EEE023752DC8}</td><td>X64</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ISX_DEFAULTCOMPONENT2</td><td>{947CB28C-45DC-4902-B873-8B6B0690141C}</td><td>X86</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>Component</td><td>{A58568D8-478C-4905-8684-03CD670AEFE6}</td><td>INSTALLDIR</td><td>2</td><td/><td>File</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ISX_DEFAULTCOMPONENT</td><td>{57534A8C-12EE-4159-BD21-B2EF8023EBF4}</td><td>AppDataFolder</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT3</td><td>{F622B228-EAAA-4BBF-82AE-0D366F8454E0}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>IS_ININSTALL_SHORTCUT</td><td>{92CB987E-FA8E-4D8B-87A2-F22B5334C85D}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>OpenCvSharpExtern.dll</td><td>{0BBC9A53-80BF-4D7D-9F65-A0E6440EDE29}</td><td>X64</td><td>2</td><td/><td>opencvsharpextern.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>OpenCvSharpExtern.dll1</td><td>{DC582CE5-F415-4723-92CA-91981DEE287E}</td><td>X86</td><td>2</td><td/><td>opencvsharpextern.dll1</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>opencv_ffmpeg341.dll</td><td>{08F98869-6BD3-41A0-B76E-18D488F937DD}</td><td>X86</td><td>2</td><td/><td>opencv_ffmpeg341.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>opencv_ffmpeg341_64.dll</td><td>{A63E069E-BC5B-4930-883C-548921D27C2F}</td><td>X64</td><td>2</td><td/><td>opencv_ffmpeg341_64.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -1060,23 +1054,11 @@
 	<table name="CreateFolder">
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>DLL</td><td>ISX_DEFAULTCOMPONENT</td></row>
+		<row><td>AppDataFolder</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>INSTALLDIR</td><td>Component</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT</td></row>
-		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT2</td></row>
 		<row><td>INSTALLDIR</td><td>ISX_DEFAULTCOMPONENT3</td></row>
 		<row><td>INSTALLDIR</td><td>IS_ININSTALL_SHORTCUT</td></row>
-		<row><td>INSTALLDIR</td><td>OpenCvSharpExtern.dll</td></row>
-		<row><td>INSTALLDIR</td><td>OpenCvSharpExtern.dll1</td></row>
-		<row><td>INSTALLDIR</td><td>opencv_ffmpeg341.dll</td></row>
-		<row><td>INSTALLDIR</td><td>opencv_ffmpeg341_64.dll</td></row>
-		<row><td>X64</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>X64</td><td>OpenCvSharpExtern.dll</td></row>
-		<row><td>X64</td><td>opencv_ffmpeg341_64.dll</td></row>
-		<row><td>X86</td><td>ISX_DEFAULTCOMPONENT2</td></row>
-		<row><td>X86</td><td>OpenCvSharpExtern.dll1</td></row>
-		<row><td>X86</td><td>opencv_ffmpeg341.dll</td></row>
 	</table>
 
 	<table name="CustomAction">
@@ -1163,7 +1145,6 @@
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DATABASEDIR</td><td>ISYourDataBaseDir</td><td>.</td><td/><td>0</td><td/></row>
-		<row><td>DLL</td><td>INSTALLDIR</td><td>dll</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
@@ -1197,8 +1178,6 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>X64</td><td>DLL</td><td>x64</td><td/><td>0</td><td/></row>
-		<row><td>X86</td><td>DLL</td><td>x86</td><td/><td>0</td><td/></row>
 		<row><td>jhoney</td><td>ProgramMenuFolder</td><td>jhoney</td><td/><td>1</td><td/></row>
 		<row><td>jhoneyimage_setup</td><td>jhoney</td><td>JHONEY~1|jhoneyimage-setup</td><td/><td>1</td><td/></row>
 	</table>
@@ -1894,14 +1873,8 @@
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>Component</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT1</td></row>
-		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT2</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT3</td></row>
 		<row><td>AlwaysInstall</td><td>IS_ININSTALL_SHORTCUT</td></row>
-		<row><td>AlwaysInstall</td><td>OpenCvSharpExtern.dll</td></row>
-		<row><td>AlwaysInstall</td><td>OpenCvSharpExtern.dll1</td></row>
-		<row><td>AlwaysInstall</td><td>opencv_ffmpeg341.dll</td></row>
-		<row><td>AlwaysInstall</td><td>opencv_ffmpeg341_64.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1918,10 +1891,6 @@
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>File</td><td>Component</td><td>JHoney_ImageConverter.기본 출력</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;JHoney_ImageConverter&gt;|Built</td><td>3</td><td/></row>
 		<row><td>jhoney_imageconverter.exe.ma</td><td>ISX_DEFAULTCOMPONENT3</td><td>JHONEY~1.MAN|JHoney_ImageConverter.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\JHoney_ImageConverter.exe.manifest</td><td>1</td><td/></row>
-		<row><td>opencv_ffmpeg341.dll</td><td>opencv_ffmpeg341.dll</td><td>OPENCV~1.DLL|opencv_ffmpeg341.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\dll\x86\opencv_ffmpeg341.dll</td><td>1</td><td/></row>
-		<row><td>opencv_ffmpeg341_64.dll</td><td>opencv_ffmpeg341_64.dll</td><td>OPENCV~1.DLL|opencv_ffmpeg341_64.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\dll\x64\opencv_ffmpeg341_64.dll</td><td>1</td><td/></row>
-		<row><td>opencvsharpextern.dll</td><td>OpenCvSharpExtern.dll</td><td>OPENCV~1.DLL|OpenCvSharpExtern.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\dll\x64\OpenCvSharpExtern.dll</td><td>1</td><td/></row>
-		<row><td>opencvsharpextern.dll1</td><td>OpenCvSharpExtern.dll1</td><td>OPENCV~1.DLL|OpenCvSharpExtern.dll</td><td>0</td><td/><td/><td/><td>1</td><td>E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\dll\x86\OpenCvSharpExtern.dll</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2067,16 +2036,10 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>Component</td><td/><td/><td>_831D41A4_802E_466C_B2A9_F506E2E1CB75_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_BB8B45D6_49D3_4055_B7D7_E0216715A84C_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT1</td><td/><td/><td>_4E697794_AE55_4F5F_98C6_0EB0D10E359F_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ISX_DEFAULTCOMPONENT2</td><td/><td/><td>_E819F181_5B32_4670_91E5_17109F43B6AF_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>Component</td><td/><td/><td>_885E5416_AACF_41C1_AE5D_9388225FAB0E_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_D877772D_ADF3_4153_8E87_C0C8FD54AEA4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT3</td><td/><td/><td>_45B2AD96_9085_4F45_98AE_6019D5AFB199_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>IS_ININSTALL_SHORTCUT</td><td/><td/><td>_8DEF6A1C_6C17_4A96_A165_B7ABDEACC167_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>OpenCvSharpExtern.dll</td><td/><td/><td>_E6AE1608_7B12_49E9_8548_A9E245053EFB_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>OpenCvSharpExtern.dll1</td><td/><td/><td>_38789A50_E699_4F21_981A_6D5619CC52B2_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>opencv_ffmpeg341.dll</td><td/><td/><td>_4CEA900C_ED80_4C7E_82C6_932A533B2DD4_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>opencv_ffmpeg341_64.dll</td><td/><td/><td>_CF1DC051_379D_4705_A08A_D608D7E0D692_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2666,7 +2629,7 @@
 		<col def="I2">Encoded</col>
 		<col def="S0">Comment</col>
 		<col def="I4">TimeStamp</col>
-		<row><td>COMPANY_NAME</td><td>1042</td><td>JHoney</td><td>0</td><td/><td>1537641614</td></row>
+		<row><td>COMPANY_NAME</td><td>1042</td><td>JHoney</td><td>0</td><td/><td>1646748688</td></row>
 		<row><td>DN_AlwaysInstall</td><td>1042</td><td>항상 설치</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_COLOR</td><td>1042</td><td>시스템의 색상 설정이 [ProductName] 실행에 적합하지 않습니다.</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDPROP_EXPRESS_LAUNCH_CONDITION_DOTNETVERSION45FULL</td><td>1033</td><td>Microsoft .NET Framework 4.5 Full package or greater needs to be installed for this installation to continue.</td><td>0</td><td/><td>195455531</td></row>
@@ -3484,6 +3447,8 @@
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME1</td><td>1042</td><td>JHoney-Image</td><td>0</td><td/><td>598126926</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1033</td><td/><td>0</td><td/><td>1537614894</td></row>
 		<row><td>IDS_SHORTCUT_DISPLAY_NAME2</td><td>1042</td><td>JHoneyImage_1.2.2</td><td>0</td><td/><td>1537629230</td></row>
+		<row><td>IDS_SHORTCUT_DISPLAY_NAME3</td><td>1033</td><td/><td>0</td><td/><td>1646746416</td></row>
+		<row><td>IDS_SHORTCUT_DISPLAY_NAME3</td><td>1042</td><td>JHoneyImage_1.2.5</td><td>0</td><td/><td>1646764848</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO</td><td>1042</td><td>아래 서버 목록에서 대상 데이터베이스 서버를 선택하십시오.</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_DB</td><td>1042</td><td>아래 카탈로그 이름 목록에서 지정하려는 데이터베이스 카탈로그를 선택하십시오.</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDS_SQLBROWSE_INTRO_TEMPLATE</td><td>1042</td><td>[IS_SQLBROWSE_INTRO]</td><td>0</td><td/><td>195465739</td></row>
@@ -3772,10 +3737,12 @@
 		<row><td>IDS__TargetReq_DESC_PROCESSOR</td><td>1042</td><td>프로세서는 [ProductName] 을(를) 가동하기 위하여 적합하지 않습니다.</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDS__TargetReq_DESC_RAM</td><td>1042</td><td>RAM 양은 [ProductName] 을(를) 가동하기 위하여 적합하지 않습니다.</td><td>0</td><td/><td>195465739</td></row>
 		<row><td>IDS__TargetReq_DESC_RESOLUTION</td><td>1042</td><td>화면 해상도는 [ProductName] 을(를) 가동하기 위하여 적합하지 않습니다.</td><td>0</td><td/><td>195465739</td></row>
-		<row><td>ID_STRING1</td><td>1042</td><td>http://www.JHoney.com</td><td>0</td><td/><td>1537641614</td></row>
-		<row><td>ID_STRING2</td><td>1042</td><td>JHoney</td><td>0</td><td/><td>1537641614</td></row>
+		<row><td>ID_STRING1</td><td>1042</td><td>http://www.JHoney.com</td><td>0</td><td/><td>1646748688</td></row>
+		<row><td>ID_STRING2</td><td>1042</td><td>JHoney</td><td>0</td><td/><td>1646748688</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>JHoneyRuntime2.1</td><td>0</td><td/><td>329707342</td></row>
 		<row><td>ID_STRING3</td><td>1042</td><td>JHoneyRuntime2.1</td><td>0</td><td/><td>329707342</td></row>
+		<row><td>ID_STRING4</td><td>1033</td><td>JHoneyImage_1.2.5</td><td>0</td><td/><td>1646723920</td></row>
+		<row><td>ID_STRING4</td><td>1042</td><td>JHoneyImage_1.2.5</td><td>0</td><td/><td>1646723920</td></row>
 		<row><td>IIDS_UITEXT_FeatureUninstalled</td><td>1042</td><td> 이 구성요소는 설치 안된 상태로 유지됩니다.</td><td>0</td><td/><td>195465739</td></row>
 	</table>
 
@@ -3892,8 +3859,10 @@
 		<row><td>ARPPRODUCTICON.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
 		<row><td>UNINST_Uninstall_J_7971F158586B4C90A78645F491126E63.exe</td><td/><td>C:\Program Files (x86)\InstallShield\2015LE\Redist\Language Independent\OS Independent\uninstall.ico</td><td>0</td></row>
 		<row><td>_Built1_0A98181C6D4A493FB294619E13C04EEF.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
+		<row><td>_Built1_1523A99212F9454DB9767F5D0C60E46B.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
 		<row><td>_Built_27AE84DAB90B412E8B830DDFCC048FB7.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
 		<row><td>_Built_473156DDA46745F3BC6AEE4FDA5FE848.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
+		<row><td>_Built_4AF56CC9733E4DD5929CCA769778F0DC.exe</td><td/><td>D:\Download\if_honey_44928.ico</td><td>0</td></row>
 	</table>
 
 	<table name="IniFile">
@@ -4371,7 +4340,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>IS_SQLSERVER_SERVER</td><td/><td/></row>
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
-		<row><td>LAUNCHPROGRAM</td><td>1</td><td/></row>
 		<row><td>LAUNCHPROGRAMCOMPCODE</td><td>{F291E5A8-5386-4A4B-9668-58AC49E1914F}</td><td/></row>
 		<row><td>LAUNCHPROGRAMFILEKEY</td><td>File2</td><td/></row>
 		<row><td>LAUNCHREADME</td><td>1</td><td/></row>
@@ -4404,7 +4372,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]JHoney_ImageConverter.기본 출력</td><td/></row>
 		<row><td>ProductCode</td><td>{093DF25E-5DE1-4B08-9B0F-341A29DE7E38}</td><td/></row>
 		<row><td>ProductName</td><td>JHoneyImage-Setup</td><td/></row>
-		<row><td>ProductVersion</td><td>1.2.3</td><td/></row>
+		<row><td>ProductVersion</td><td>1.2.5</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
@@ -4416,7 +4384,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>RestartManagerOption</td><td>CloseRestart</td><td/></row>
 		<row><td>SERIALNUMBER</td><td/><td/></row>
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
-		<row><td>SHOWLAUNCHPROGRAM</td><td>-1</td><td/></row>
+		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;DOTNETVERSION45FULL</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
@@ -4482,7 +4450,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
 		<row><td>UNINST_Uninstall_JHoneyImage_Setup</td><td>IS_ININSTALL_SHORTCUT</td><td/><td>jhoneyimage_setup</td><td>2</td></row>
-		<row><td>_Built</td><td>Component</td><td/><td>jhoneyimage_setup</td><td>2</td></row>
 	</table>
 
 	<table name="RemoveIniFile">
@@ -4569,7 +4536,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="S255">ISShortcutName</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>UNINST_Uninstall_JHoneyImage_Setup</td><td>jhoneyimage_setup</td><td>UNINST|Uninstall JHoneyImage-Setup</td><td>IS_ININSTALL_SHORTCUT</td><td>[SystemFolder]msiexec.exe</td><td>/x {093DF25E-5DE1-4B08-9B0F-341A29DE7E38}</td><td/><td/><td>UNINST_Uninstall_J_7971F158586B4C90A78645F491126E63.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
-		<row><td>_Built</td><td>jhoneyimage_setup</td><td>##IDS_SHORTCUT_DISPLAY_NAME2##</td><td>Component</td><td>AlwaysInstall</td><td/><td/><td/><td>_Built_473156DDA46745F3BC6AEE4FDA5FE848.exe</td><td>0</td><td>1</td><td/><td/><td/><td/><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="Signature">

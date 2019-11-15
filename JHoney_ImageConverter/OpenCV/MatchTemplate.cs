@@ -248,6 +248,7 @@ namespace JHoney_ImageConverter.OpenCV
         public void DoMatchTemplateAndSave(string rawImagePath, string targetImagePath, double Theshold, string outputPath)
         {
             int result_cols, result_rows;
+            Mat RawImage = Cv2.ImRead(rawImagePath, ImreadModes.Unchanged);
             Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.GrayScale);
             Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.GrayScale);
 
@@ -282,9 +283,9 @@ namespace JHoney_ImageConverter.OpenCV
 
             if (roi.Y < 0)
                 roi.Y = 0;
-
-            SrcImage = SrcImage.Clone(roi);
-            SrcImage.SaveImage(outputPath);
+            
+            RawImage = RawImage.Clone(roi);
+            RawImage.SaveImage(outputPath);
         }
     }
 

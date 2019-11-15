@@ -1,7 +1,7 @@
 ﻿JHoney_ImageConverter
 
 
-winexe
+exe
 C#
 .cs
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\
@@ -12,9 +12,9 @@ DEBUG;TRACE
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\App.xaml
 13-419220068
 
-60-752183518
+62309603701
 78-1097116174
 MainWindow.xaml;Resources\Icons.xaml;Resources\IconsNonShared.xaml;Themes\HamburgerMenu.xaml;Themes\HamburgerMenuTemplate.xaml;Util\Loading\View\LoadingView.xaml;Util\Loading\View\ProgressLoadingView.xaml;View\ImageConverterView.xaml;View\ImageDetectorView.xaml;View\ImageDifferenceView.xaml;View\ImageListView.xaml;View\ImageMuiltConvertView.xaml;View\ImagePatternMatchView.xaml;
 
-False
+True
 

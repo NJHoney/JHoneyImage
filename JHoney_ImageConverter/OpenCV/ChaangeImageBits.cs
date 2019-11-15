@@ -13,13 +13,17 @@ namespace JHoney_ImageConverter.OpenCV
         {
             Mat rawImage = Cv2.ImRead(inputImgPath, ImreadModes.Unchanged);
             Mat DstImage = rawImage.Clone();
-            Mat[] Merged = new Mat[3];
+            Mat[] Merged = new Mat[4];
+            Mat mask = rawImage.Clone();
+            Mat resImg = new Mat(rawImage.Size(), MatType.CV_8UC4);
+            //mask = ~mask;
+            Cv2.Threshold(mask, mask, 1, 255, ThresholdTypes.Binary);
             //string temp = rawImage.ToString();
             ////temp = temp.Substring(temp.IndexOf("*", 1), temp.IndexOf(",") - temp.IndexOf("*", 1));
             ////temp = temp.Substring(temp.IndexOf("*", 2) + 1, temp.Length - temp.IndexOf("*", 2) - 1);
-
+            //mask.SaveImage(@"E:\Test\인터노조\Transparent\1.png");
             MatType CurrentType = MatType.MakeType(rawImage.Depth(), rawImage.Channels());
-
+            
             switch (Bits)
             {
                 case 1:
@@ -44,16 +48,31 @@ namespace JHoney_ImageConverter.OpenCV
                     }
                     else
                     {
+
                         DstImage.ConvertTo(rawImage, MatType.CV_8UC3);
                     }
                     
                     break;
                 case 4:
-                    DstImage.ConvertTo(rawImage, MatType.CV_8UC4);
+                    //DstImage.ConvertTo(rawImage, MatType.CV_8UC4);
+                    Mat newa = new Mat(384, 455, MatType.CV_8UC1, new Scalar(255));
+                    
+                    Merged[0] = DstImage;
+                    Merged[1] = DstImage;
+                    Merged[2] = DstImage;
+                    Merged[3] = mask;
+
+                    Cv2.Merge(Merged, DstImage);
                     break;
             }
 
-            //DstImage.SaveImage(outputImgPath.Substring(0, outputImgPath.LastIndexOf(".")) + "." + Extension);
+            //test
+            //resImg.SaveImage(@"E:\Test\인터노조\Transparent\2.png");
+            //resImg.SaveImage(outputImgPath);
+            //resImg.Dispose();
+            //mask.Dispose();
+            //
+
             DstImage.SaveImage(outputImgPath);
             DstImage.Dispose();
             rawImage.Dispose();

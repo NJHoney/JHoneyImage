@@ -151,3 +151,4 @@ E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Release\JHoney_Im
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Release\JHoney_ImageConverter.application
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Release\JHoney_ImageConverter.exe
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Release\JHoney_ImageConverter.pdb
+E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Release\JHoney_ImageConverter.csprojResolveAssemblyReference.cache

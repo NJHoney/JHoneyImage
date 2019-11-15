@@ -219,9 +219,9 @@ namespace JHoney_ImageConverter.ViewModel
                         case "MergeImage":
                             ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
                             break;
-                        //case "Test":
-                        //    ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
-                        //    break;
+                        case "Test":
+                            ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
+                            break;
                     }
                 }
             }
@@ -314,10 +314,10 @@ namespace JHoney_ImageConverter.ViewModel
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = true;
                     WorkList[10].IsSelected = true;
                     break;
-                //case "Test":
-                //    ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                //    WorkList[10].IsSelected = true;
-                //    break;
+                case "Test":
+                    ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
+                    WorkList[11].IsSelected = true;
+                    break;
 
             }
         }

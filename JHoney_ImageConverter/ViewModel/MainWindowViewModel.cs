@@ -222,9 +222,9 @@ namespace JHoney_ImageConverter.ViewModel
                 case "MergeImage":
 
                     break;
-                //case "Test":
-                //    ImageConverterViewModel._blob.TestBlob(InputPath, OutputPath);
-                //    break;
+                case "Test":
+                    ImageConverterViewModel._blob.TestBlob(InputPath, OutputPath);
+                    break;
             }
         }
         /*

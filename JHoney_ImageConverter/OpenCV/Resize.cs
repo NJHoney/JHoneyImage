@@ -12,7 +12,7 @@ namespace JHoney_ImageConverter.OpenCV
         public Mat ResizeFromPath(Mat RawImage, int width, int height)
         {
             Mat dst = new Mat();
-            Cv2.Resize(RawImage, dst, new Size(width, height), 0, 0, InterpolationFlags.Linear);
+            Cv2.Resize(RawImage, dst, new Size(width, height), 0, 0, InterpolationFlags.Cubic);
 
             return dst;
         }
@@ -21,7 +21,7 @@ namespace JHoney_ImageConverter.OpenCV
             Mat rawImage = Cv2.ImRead(inputImgPath, ImreadModes.Unchanged);
             Mat croppedImage;
 
-            croppedImage = rawImage.Resize(new Size(Width, Height));
+            croppedImage = rawImage.Resize(new Size(Width, Height), 0, 0, InterpolationFlags.Cubic);
 
             croppedImage.ImWrite(outputImgPath);
 

@@ -118,7 +118,6 @@ E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.Extensions.xml
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.UserInterface.pdb
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.UserInterface.xml
-E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\JHoney_ImageConverter.csprojResolveAssemblyReference.cache
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\Resources\Icons.baml
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\Resources\IconsNonShared.baml
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\Themes\HamburgerMenu.baml
@@ -152,3 +151,4 @@ E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\JHoney_Imag
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\JHoney_ImageConverter.application
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\View\ImageDetectorView.g.cs
 E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\View\ImageDetectorView.baml
+E:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\JHoney_ImageConverter.csprojResolveAssemblyReference.cache
