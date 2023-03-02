@@ -6,14 +6,11 @@
              xmlns:local="clr-namespace:JHoney_ImageConverter.View"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:vc="clr-namespace:JHoney_ImageConverter.Converter"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              Visibility="{Binding Visibility}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <vc:MultiBindingConverter x:Key="MBC" />
-    </UserControl.Resources>
+    
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -27,13 +24,13 @@
         </Grid.RowDefinitions>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="KeyDown">
-                <cmd:EventToCommand Command="{Binding ImageConvertViewModelKeyEvent.EventKeyDown}" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding ImageConvertViewModelKeyEvent.EventKeyDown}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="KeyUp">
-                <cmd:EventToCommand Command="{Binding ImageConvertViewModelKeyEvent.EventKeyUp}" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding ImageConvertViewModelKeyEvent.EventKeyUp}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="KeyUp">
-                <cmd:EventToCommand Command="{Binding }" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding }" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
 
@@ -48,7 +45,7 @@
                     <DataGrid x:Name="DataGrid" ItemsSource="{Binding ImageInfoDataGridList}" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Loaded">
-                                <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=DataGrid, Mode=OneWay}" />
+                                <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=DataGrid, Mode=OneWay}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </DataGrid>
@@ -56,18 +53,33 @@
             </GroupBox>
             <!--ROI박스-->
             <GroupBox Grid.Column="1" Margin="5" HorizontalAlignment="Center" Visibility="{Binding IsSelectRectangle, Converter={vc:BoolenToVisibilityConverter}}">
-                <StackPanel  Orientation="Horizontal" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="ROI X : " VerticalAlignment="Center" Margin="5" />
-                    <TextBox Width="35" Height="15" Text="{Binding StartRectPointX}" VerticalAlignment="Center" Margin="5" />
+                    <TextBox Width="45" Height="15" Text="{Binding StartRectPointX}" VerticalAlignment="Center" Margin="5" />
                     <TextBlock Text="ROI Y : " VerticalAlignment="Center" Margin="5" />
-                    <TextBox Width="35" Text="{Binding StartRectPointY}" VerticalAlignment="Center" Margin="5" />
-                    <TextBlock Text="Width : " VerticalAlignment="Center" Margin="5" />
-                    <TextBox Width="35" Text="{Binding RectWidth}" VerticalAlignment="Center" Margin="5" />
-                    <TextBlock Text="Height : " VerticalAlignment="Center" Margin="5" />
-                    <TextBox Width="35" Text="{Binding RectHeight}" VerticalAlignment="Center" Margin="5" />
-                    <Button Content="Crop" Margin="5" VerticalAlignment="Center" Command="{Binding CommandCropResize}" CommandParameter="Crop" />
-                    <Button Content="ReSize" Margin="5" VerticalAlignment="Center" Command="{Binding CommandCropResize}" CommandParameter="ReSize" />
+                        <TextBox Width="45" Text="{Binding StartRectPointY}" VerticalAlignment="Center" Margin="5" />
+                        <Button Content="Crop" Margin="5" VerticalAlignment="Center" Command="{Binding CommandCropResize}" CommandParameter="Crop" />
+                    
                 </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Width : " VerticalAlignment="Center" Margin="5" />
+                        <TextBox Width="45" Text="{Binding RectWidth}" VerticalAlignment="Center" Margin="5" />
+                        <TextBlock Text="Height : " VerticalAlignment="Center" Margin="5" />
+                        <TextBox Width="45" Text="{Binding RectHeight}" VerticalAlignment="Center" Margin="5" />
+                        <Button Content="ReSize" Margin="5" VerticalAlignment="Center" Command="{Binding CommandCropResize}" CommandParameter="ReSize" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <TextBlock Text="Size : " VerticalAlignment="Center" Margin="5" />
+                        <TextBox Width="45" Text="{Binding RatioResizeSize}" VerticalAlignment="Center" Margin="5" />
+                        <Button Content="ReSize-Ratio" Margin="5" VerticalAlignment="Center" Command="{Binding CommandCropResize}" CommandParameter="ReSizeRatio" />
+                    </StackPanel>
+                </Grid>
             </GroupBox>
         </Grid>
         <!--캔버스-->
@@ -80,27 +92,28 @@
                 </Canvas.LayoutTransform>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Loaded">
-                        <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=MainCanvas, Mode=OneWay}" />
+                        <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=MainCanvas, Mode=OneWay}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseUp">
-                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
+                        <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseDown">
-                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
+                        <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseMove">
-                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                        <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="Drop">
-                        <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                        <i:InvokeCommandAction Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseWheel">
-                        <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                        <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Canvas.ContextMenu>
                     <ContextMenu>
                         <MenuItem Command="{Binding CanvasContext}" CommandParameter="Normal" Header="Normal" IsChecked="{Binding IsSelectNormal}" />
+                        <MenuItem Command="{Binding CanvasContext}" CommandParameter="Hand" Header="Hand" />
                         <MenuItem Command="{Binding CanvasContext}" CommandParameter="SetROI" Header="SetROI" IsCheckable="True" IsChecked="{Binding IsSelectRectangle}"/>
                         <MenuItem Command="{Binding CanvasContext}" CommandParameter="ToList" Header="ToList" />
                         <MenuItem Command="{Binding CanvasContext}" CommandParameter="Save" Header="Save" />
@@ -136,140 +149,23 @@
                     </StackPanel>
                 </Expander>
                 <!--파라메터컨버터-->
-                <Expander Header="Parameter Converter" IsExpanded="False" Margin="5">
+                <Expander Header="Parameter Converter" IsExpanded="True" Margin="5">
                     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="5">
                         <ToggleButton x:Name="ToggleBinary" Content="Binary" IsEnabled="{Binding TogleButtonEnabled[0]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleBinary" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleBinary" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                         </ToggleButton>
                         <ToggleButton x:Name="ToggleGaussian" Content="GaussianBlur" IsEnabled="{Binding TogleButtonEnabled[1]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleGaussian" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleGaussian" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            
                         </ToggleButton>
                         <ToggleButton x:Name="ToggleCanny" Content="Canny Edge" IsEnabled="{Binding TogleButtonEnabled[2]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleCanny" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleCanny" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            
                         </ToggleButton>
                         <ToggleButton x:Name="ToggleMedian" Content="Median Blur" IsEnabled="{Binding TogleButtonEnabled[3]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleMedian" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleMedian" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            
                         </ToggleButton>
                         <ToggleButton x:Name="ToggleRotate" Content="Rotate" IsEnabled="{Binding TogleButtonEnabled[4]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleRotate" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleRotate" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                           
                         </ToggleButton>
-                        <ToggleButton x:Name="ToggleEdge" Content="Rotate" IsEnabled="{Binding TogleButtonEnabled[5]}" >
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleEdge" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="Unchecked">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandToggle}" >
-                                        <cmd:EventToCommand.CommandParameter>
-                                            <MultiBinding Converter="{StaticResource MBC}">
-                                                <Binding ElementName="ToggleEdge" />
-                                            </MultiBinding>
-                                        </cmd:EventToCommand.CommandParameter>
-                                    </cmd:EventToCommand>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </ToggleButton>
+                        
                     </StackPanel>
                 </Expander>
 
@@ -277,7 +173,7 @@
         </GroupBox>
 
         <!--옵션탭-->
-        <GroupBox Grid.Column="0" Grid.Row="1" Margin="5" Visibility="{Binding IsToggled, Converter={vc:BoolenToVisibilityConverter} }">
+        <GroupBox Grid.Column="0" Grid.Row="1" Margin="5" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -293,7 +189,7 @@
                 <ScrollBar x:Name="scrollBar" Grid.Column="0" Grid.Row="1" Orientation="Horizontal" Width="200" Minimum="{Binding OptionParamSlider_01_Min}" Maximum="{Binding OptionParamSlider_01_Max}" Margin="5" HorizontalAlignment="Stretch" VerticalAlignment="Center" SmallChange="1" LargeChange="10"  >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="ValueChanged">
-                            <cmd:EventToCommand Command="{Binding Path=CommandChangeSliderValue}" CommandParameter="{Binding Value, ElementName=scrollBar}" />
+                            <i:InvokeCommandAction Command="{Binding Path=CommandChangeSliderValue}" CommandParameter="{Binding Value, ElementName=scrollBar}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ScrollBar>

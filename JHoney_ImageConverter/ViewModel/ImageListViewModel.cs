@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using MahApps.Metro.Controls;
@@ -7,6 +6,8 @@ using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,121 +21,134 @@ namespace JHoney_ImageConverter.ViewModel
 {
     class ImageListViewModel : CustomViewModelBase
     {
-
-        #region 프로퍼티
+        public MainWindowViewModel _mainWindowViewModel;
         Thread AddFileThread;
+        #region 프로퍼티
         #region ---［ Pagging ］---------------------------------------------------------------------
         public int CurrentPage
         {
             get { return _currentPage; }
-            set { _currentPage = value; RaisePropertyChanged("CurrentPage"); }
+            set { _currentPage = value; OnPropertyChanged("CurrentPage"); }
         }
         private int _currentPage = 1;
 
         public int MaxPage
         {
             get { return _maxPage; }
-            set { _maxPage = value; RaisePropertyChanged("MaxPage"); }
+            set { _maxPage = value; OnPropertyChanged("MaxPage"); }
         }
         private int _maxPage = 1;
 
         public int PagingSize
         {
             get { return _pagingSize; }
-            set { _pagingSize = value; RaisePropertyChanged("PagingSize"); }
+            set { _pagingSize = value; PageListExtract(""); OnPropertyChanged("PagingSize");  }
         }
-        private int _pagingSize = 30;
+        private int _pagingSize = 10;
 
-        public ObservableCollection<PagingButtonModel> SelectNumPageList
+        public int ThumbNailSize
         {
-            get { return _selectNumPageList; }
-            set { _selectNumPageList = value; RaisePropertyChanged("SelectNumPageList"); }
+            get { return _thumbNailSize; }
+            set { _thumbNailSize = value; PageListExtract(""); OnPropertyChanged("ThumbNailSize"); }
         }
-        private ObservableCollection<PagingButtonModel> _selectNumPageList = new ObservableCollection<PagingButtonModel>();
+        private int _thumbNailSize = 100;
         #endregion ---------------------------------------------------------------------------------
-
-        private Object LockObject = new object();
-
-
-        public ListBox ImageListBox
+        public bool BoolListViewFold
         {
-            get { return _imageListBox; }
-            set { _imageListBox = value; RaisePropertyChanged("ImageListBox"); }
+            get { return _boolListViewFold; }
+            set { _boolListViewFold = value; OnPropertyChanged("BoolListViewFold"); }
         }
-        private ListBox _imageListBox = new ListBox();
-        public ObservableCollection<FileIOModel> LoadImageListAll
+        private bool _boolListViewFold = true;
+
+        public bool BoolSelectImageView
         {
-            get { return _loadImageListAll; }
-            set { _loadImageListAll = value; RaisePropertyChanged("LoadImageListAll"); }
+            get { return _boolSelectImageView; }
+            set { _boolSelectImageView = value; OnPropertyChanged("BoolSelectImageView"); }
         }
-        private ObservableCollection<FileIOModel> _loadImageListAll = new ObservableCollection<FileIOModel>();
+        private bool _boolSelectImageView = true;
 
-        public ObservableCollection<FileIOModel> LoadImageListCurrent
+        public Visibility OpenCloseVisibility
         {
-            get { return _loadImageListCurrent; }
-            set { _loadImageListCurrent = value; RaisePropertyChanged("LoadImageListCurrent"); }
+            get { return _openCloseVisibility; }
+            set { _openCloseVisibility = value; OnPropertyChanged("OpenCloseVisibility"); }
         }
-        private ObservableCollection<FileIOModel> _loadImageListCurrent = new ObservableCollection<FileIOModel>();
+        private Visibility _openCloseVisibility = Visibility.Visible;
 
-        string ThumbnailImgPath = AppDomain.CurrentDomain.BaseDirectory + "\\Temp\\Thumbnail\\";
-
-        #region ---［ Menu ］---------------------------------------------------------------------
+        public Visibility ImageModeVisibility
+        {
+            get { return _imageModeVisibility; }
+            set { _imageModeVisibility = value; OnPropertyChanged("ImageModeVisibility"); }
+        }
+        private Visibility _imageModeVisibility = Visibility.Visible;
 
         public int FileOpenSelectedIndex
         {
             get { return _fileOpenSelectedIndex; }
-            set { _fileOpenSelectedIndex = value; RaisePropertyChanged("FileOpenSelectedIndex"); }
+            set { _fileOpenSelectedIndex = value; OnPropertyChanged("FileOpenSelectedIndex"); }
         }
         private int _fileOpenSelectedIndex = 0;
 
+        public GridLength GridSplitterLength
+        {
+            get { return _gridSplitterLength; }
+            set { _gridSplitterLength = value; OnPropertyChanged("GridSplitterLength"); }
+        }
+        private GridLength _gridSplitterLength = GridLength.Auto;
 
         public ObservableCollection<string> FileOpenMenuList
         {
             get { return _fileOpenMenuList; }
-            set { _fileOpenMenuList = value; RaisePropertyChanged("FileOpenMenuList"); }
+            set { _fileOpenMenuList = value; OnPropertyChanged("FileOpenMenuList"); }
         }
         private ObservableCollection<string> _fileOpenMenuList = new ObservableCollection<string>();
 
         public int FileDelSelectedIndex
         {
             get { return _fileDelSelectedIndex; }
-            set { _fileDelSelectedIndex = value; RaisePropertyChanged("FileDelSelectedIndex"); }
+            set { _fileDelSelectedIndex = value; OnPropertyChanged("FileDelSelectedIndex"); }
         }
         private int _fileDelSelectedIndex = 0;
         public ObservableCollection<string> FileDelMenuList
         {
             get { return _fileDelMenuList; }
-            set { _fileDelMenuList = value; RaisePropertyChanged("FileDelMenuList"); }
+            set { _fileDelMenuList = value; OnPropertyChanged("FileDelMenuList"); }
         }
         private ObservableCollection<string> _fileDelMenuList = new ObservableCollection<string>();
-        #endregion ---------------------------------------------------------------------------------
 
-
-        public Visibility OpenCloseVisibility
+        public ObservableCollection<PagingButtonModel> SelectNumPageList
         {
-            get { return _openCloseVisibility; }
-            set { _openCloseVisibility = value; RaisePropertyChanged("OpenCloseVisibility"); }
+            get { return _selectNumPageList; }
+            set { _selectNumPageList = value; OnPropertyChanged("SelectNumPageList"); }
         }
-        private Visibility _openCloseVisibility = Visibility.Collapsed;
+        private ObservableCollection<PagingButtonModel> _selectNumPageList = new ObservableCollection<PagingButtonModel>();
+
+        public ObservableCollection<FileIOModel> LoadImageListAll
+        {
+            get { return _loadImageListAll; }
+            set { _loadImageListAll = value; OnPropertyChanged("LoadImageListAll"); }
+        }
+        private ObservableCollection<FileIOModel> _loadImageListAll = new ObservableCollection<FileIOModel>();
+
+        public ObservableCollection<FileIOModel> LoadImageListCurrent
+        {
+            get { return _loadImageListCurrent; }
+            set { _loadImageListCurrent = value; OnPropertyChanged("LoadImageListCurrent"); }
+        }
+        private ObservableCollection<FileIOModel> _loadImageListCurrent = new ObservableCollection<FileIOModel>();
+
         public string OpenCloseText
         {
             get { return _openCloseText; }
-            set { _openCloseText = value; RaisePropertyChanged("OpenCloseText"); }
+            set { _openCloseText = value; OnPropertyChanged("OpenCloseText"); }
         }
-        private string _openCloseText = "▶";
-
+        private string _openCloseText = "◀";
         #endregion
         #region 커맨드
-        public RelayCommand<object> CommandOpenMenu { get; private set; }
-        public RelayCommand<object> CommandDelMenu { get; private set; }
         public RelayCommand<object> CommandOpenClose { get; private set; }
+        public RelayCommand<object> CommandSelectMode { get; private set; }
+        public RelayCommand<object> CommandOpenMenu { get; private set; }
         public RelayCommand<object> CommandSetPage { get; private set; }
-        public RelayCommand<object> CommandSelectImage { get; private set; }
-        public RelayCommand<object> CommandLoaded { get; private set; }
-
-        public RelayCommand<DragEventArgs> CommandDropFile { get; private set; }
-
-
+        public RelayCommand<SelectionChangedEventArgs> CommandSelectImage { get; private set; }
         #endregion
 
         #region 초기화
@@ -159,57 +173,78 @@ namespace JHoney_ImageConverter.ViewModel
 
         void InitCommand()
         {
-            CommandOpenMenu = new RelayCommand<object>((param) => OnCommandOpenMenu(param));
-            CommandDelMenu = new RelayCommand<object>((param) => OnCommandDelMenu(param));
             CommandOpenClose = new RelayCommand<object>((param) => OnCommandOpenClose(param));
+            CommandSelectMode = new RelayCommand<object>((param) => OnCommandSelectMode(param));
+            CommandOpenMenu = new RelayCommand<object>((param) => OnCommandOpenMenu(param));
             CommandSetPage = new RelayCommand<object>((param) => OnCommandSetPage(param));
-            CommandSelectImage = new RelayCommand<object>((param) => OnCommandSelectImage(param));
-            CommandLoaded = new RelayCommand<object>((param) => OnCommandLoaded(param));
-
-            CommandDropFile = new RelayCommand<DragEventArgs>((e) => OnCommandDropFile(e));
+            CommandSelectImage = new RelayCommand<SelectionChangedEventArgs>((e) => OnCommandSelectImage(e));
         }
 
 
 
         void InitEvent()
         {
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<MessengerImageGetSet>(this, (msgData) =>
-                      {
-                          if (msgData.MessageId == "ToList")
-                          {
-                              LoadImageListAll.Add(new FileIOModel(msgData.MessageImagePath));
-                              PageListExtract("");
-                              ListNumRefresh();
-                          }
-                      });
+
         }
         #endregion
 
         #region 이벤트
-        private void OnCommandDropFile(DragEventArgs e)
+        private void OnCommandOpenClose(object param)
         {
-            string[] file = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            BoolListViewFold = !BoolListViewFold;
+            if (BoolListViewFold)
             {
-                LoadImageListCurrent.Clear();
-                SelectNumPageList.Clear();
-                MessengerMain msgData = new MessengerMain("ProgressLoading", "true", null, null);
-                Messenger.Default.Send<MessengerMain>(msgData);
-
-                AddFileThread = new Thread(() => AddFileThreadMethod(file));
-                AddFileThread.Start();
-                AddFileThread.Join();
-                PageListExtract("");
-                ListNumRefresh();
-
+                _mainWindowViewModel.GridSplitterLength = new GridLength(_mainWindowViewModel.GridSplitterPreViewLength);
+                OpenCloseVisibility = Visibility.Visible;
+                OpenCloseText = "◀";
+            }
+            else
+            {
+                //_mainWindowViewModel.GridSplitterPreViewLength = _mainWindowViewModel.GridSplitterLength.Value;
+                OpenCloseVisibility = Visibility.Collapsed;
+                OpenCloseText = "▶";
+                _mainWindowViewModel.GridSplitterLength = new GridLength(1, GridUnitType.Auto);
+                GridSplitterLength = new GridLength(1, GridUnitType.Star);
 
             }
+        }
+        private void OnCommandSelectMode(object param)
+        {
+            if (param == null)
+            {
+                return;
+            }
+            if (param.ToString() == "Image")
+            {
+                BoolSelectImageView = true;
+                ImageModeVisibility = Visibility.Visible;
 
+                _mainWindowViewModel.IsEnabled = false;
+                _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                for (int i = 0; i < LoadImageListCurrent.Count; i++)
+                {
+                    if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
+                    {
+                        NoThumbTemp.Add(LoadImageListCurrent[i]);
+                    }
+                }
+
+                AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                AddFileThread.Start();
+            }
+            else
+            {
+                BoolSelectImageView = false;
+
+                ImageModeVisibility = Visibility.Collapsed;
+
+            }
         }
 
         private void OnCommandOpenMenu(object param)
         {
-            MessengerMain msgData;
             DirectoryInfo di;
             WPFFolderBrowser.WPFFolderBrowserDialog fbd;
 
@@ -226,13 +261,17 @@ namespace JHoney_ImageConverter.ViewModel
                     {
                         LoadImageListCurrent.Clear();
                         SelectNumPageList.Clear();
-                        msgData = new MessengerMain("ProgressLoading", "true", null, null);
-                        Messenger.Default.Send<MessengerMain>(msgData);
-                        AddFileThread = new Thread(() => AddFileThreadMethod(Dialog.FileNames));
-                        AddFileThread.Start();
-                        AddFileThread.Join();
+
+                        AddFileThreadMethod(Dialog.FileNames);
                         PageListExtract("");
-                        ListNumRefresh();
+
+                        if (BoolSelectImageView)
+                        {
+                            _mainWindowViewModel.IsEnabled = false;
+                            _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                            AddFileThread = new Thread(() => MakeThumbnailandList(LoadImageListCurrent));
+                            AddFileThread.Start();
+                        }
                     }
                     break;
                 case 1:
@@ -269,57 +308,225 @@ namespace JHoney_ImageConverter.ViewModel
                     break;
             }
         }
-        private void OnCommandDelMenu(object param)
+        void MakeThumbnailandList(ObservableCollection<FileIOModel> TempList)
         {
-            switch (FileDelSelectedIndex)
+
+            for (int iLoofCount = 0; iLoofCount < TempList.Count; iLoofCount++)
             {
-                case 0:
-                    if (ImageListBox.SelectedItems.Count < 1)
+                int index = iLoofCount;
+                _mainWindowViewModel.ProgressLoadingViewModel.SetProgress(index, TempList.Count);
+
+                Mat TempThumbnail = new Mat(TempList[index].FileName_Full);
+                double width = TempThumbnail.Width;
+                double height = TempThumbnail.Height;
+                double ash = ThumbNailSize / height;
+                double asw = ThumbNailSize / width;
+                OpenCvSharp.Size sizeas;
+                if (asw < ash)
+                {
+                    sizeas = new OpenCvSharp.Size((width * asw), (height * asw));
+                }
+                else
+                {
+                    sizeas = new OpenCvSharp.Size(width * ash, height * ash);
+                }
+                Mat TempResized = Mat.Zeros(ThumbNailSize, ThumbNailSize, MatType.CV_8UC3);
+                TempThumbnail = TempThumbnail.Resize(sizeas);
+                var roi = new Mat(TempResized, new OpenCvSharp.Rect((ThumbNailSize / 2) - (sizeas.Width / 2), (ThumbNailSize / 2) - (sizeas.Height / 2), sizeas.Width, sizeas.Height));
+                TempThumbnail.CopyTo(roi);
+                TempList[index].ThumbnailBitmapImage = SetThumbnailBitmap(OpenCvSharp.Extensions.BitmapConverter.ToBitmap(TempResized));
+                roi.Dispose();
+                TempResized.Dispose();
+                TempThumbnail.Dispose();
+            }
+            _mainWindowViewModel.IsEnabled = true;
+            _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Collapsed;
+        }
+        BitmapImage SetThumbnailBitmap(Bitmap inputBitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                inputBitmap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+                bitmapImage.Freeze();
+
+                return bitmapImage;
+            }
+
+            //BitmapImage b = new BitmapImage();
+            //b.UriSource = null;
+            //var stream = File.OpenRead(ImagePath);
+            //b.BeginInit();
+            //b.CacheOption = BitmapCacheOption.OnLoad;
+            //b.StreamSource = stream;
+            //b.EndInit();
+            //stream.Close();
+            //stream.Dispose();
+
+            //return b;
+        }
+        void PageListExtract(string findPageCommand)
+        {
+            if (findPageCommand == "First")
+            {
+                CurrentPage = 1;
+                //var k = LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize);
+                LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
+                if (BoolSelectImageView)
+                {
+                    _mainWindowViewModel.IsEnabled = false;
+                    _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                    ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                    for (int i = 0; i < LoadImageListCurrent.Count; i++)
                     {
-                        if (LoadImageListCurrent.Count < 1)
+                        if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
                         {
-                            return;
+                            NoThumbTemp.Add(LoadImageListCurrent[i]);
                         }
-                        LoadImageListAll.RemoveAt(0);
-                        LoadImageListCurrent.RemoveAt(0);
                     }
-                    else
+
+                    AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                    AddFileThread.Start();
+                }
+                return;
+            }
+
+            if (findPageCommand == "Last")
+            {
+                CurrentPage = MaxPage;
+                LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
+                if (BoolSelectImageView)
+                {
+                    _mainWindowViewModel.IsEnabled = false;
+                    _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                    ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                    for (int i = 0; i < LoadImageListCurrent.Count; i++)
                     {
-                        int LoofCount = ImageListBox.SelectedItems.Count;
-                        for (int iLoofCount = 0; iLoofCount < LoofCount; iLoofCount++)
+                        if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
                         {
-                            LoadImageListAll.Remove((FileIOModel)ImageListBox.SelectedItems[0]);
-                            LoadImageListCurrent.Remove((FileIOModel)ImageListBox.SelectedItems[0]);
+                            NoThumbTemp.Add(LoadImageListCurrent[i]);
                         }
                     }
-                    break;
-                case 1:
+
+                    AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                    AddFileThread.Start();
+                }
+                return;
+            }
+
+            if (findPageCommand == "Next")
+            {
+                if (LoadImageListAll.Count < (CurrentPage) * PagingSize)
+                {
+                    if (BoolSelectImageView)
+                    {
+                        _mainWindowViewModel.IsEnabled = false;
+                        _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                        ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                        for (int i = 0; i < LoadImageListCurrent.Count; i++)
+                        {
+                            if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
+                            {
+                                NoThumbTemp.Add(LoadImageListCurrent[i]);
+                            }
+                        }
+
+                        AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                        AddFileThread.Start();
+                    }
+                    return;
+                }
+            }
+            else if (findPageCommand == "Back")
+            {
+                if (CurrentPage <= 1)
+                {
+                    if (BoolSelectImageView)
+                    {
+                        _mainWindowViewModel.IsEnabled = false;
+                        _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                        ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                        for (int i = 0; i < LoadImageListCurrent.Count; i++)
+                        {
+                            if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
+                            {
+                                NoThumbTemp.Add(LoadImageListCurrent[i]);
+                            }
+                        }
+
+                        AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                        AddFileThread.Start();
+                    }
+                    return;
+                }
+            }
+
+            if (findPageCommand == "Next")
+            {
+                CurrentPage++;
+
+            }
+            else if (findPageCommand == "Back")
+            {
+                CurrentPage--;
+            }
+            if (LoadImageListCurrent.Count > 0)
+            {
+                
                     LoadImageListCurrent.Clear();
-                    LoadImageListAll.Clear();
-                    CurrentPage = 1;
-                    MaxPage = 1;
-                    PageListExtract("");
-                    ListNumRefresh();
-                    break;
+                
             }
+
+            LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
+
+            ListNumRefresh();
+
+            if (BoolSelectImageView)
+            {
+                _mainWindowViewModel.IsEnabled = false;
+                _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                AddFileThread = new Thread(() => MakeThumbnailandList(LoadImageListCurrent));
+                AddFileThread.Start();
+            }
+
         }
-        private void OnCommandOpenClose(object param)
+        void ListNumRefresh()
         {
-            if (OpenCloseVisibility == Visibility.Collapsed)
+            
+                SelectNumPageList.Clear();
+
+            MaxPage =(int)Math.Ceiling(((double)LoadImageListAll.Count / (double)PagingSize));
+            int TempPage = (((CurrentPage - 1) / 5) * 5) + 1;
+            for (int iLoofCount = 0; iLoofCount < 5; iLoofCount++)
             {
-                OpenCloseVisibility = Visibility.Visible;
-                OpenCloseText = "◀";
+                if ((TempPage + iLoofCount) <= MaxPage)
+                {
+                    SelectNumPageList.Add(new PagingButtonModel() { PageNum = (TempPage + iLoofCount).ToString(), IsEnabled = true });
+                }
             }
-            else if (OpenCloseVisibility == Visibility.Visible)
+            var a = from b in SelectNumPageList
+                    where b.PageNum == (CurrentPage).ToString()
+                    select b;
+            if (a.Count() > 0)
             {
-                OpenCloseVisibility = Visibility.Collapsed;
-                OpenCloseText = "▶";
+                int TempCount = SelectNumPageList.IndexOf(a.First());
+                SelectNumPageList[TempCount].IsEnabled = false;
             }
         }
+
         private void AddFileThreadMethod(string[] files)
         {
-            BaseMessageData msgData;
-            MessengerMain msgData2;
             for (int iLoofCount = 0; iLoofCount < files.Count(); iLoofCount++)
             {
                 FileAttributes attr = File.GetAttributes(files[iLoofCount]);
@@ -328,7 +535,7 @@ namespace JHoney_ImageConverter.ViewModel
                     for (int iLoopCount = 0; iLoopCount < files.Count(); iLoopCount++)
                     {
                         DirectoryInfo di = new DirectoryInfo(files[iLoofCount]);
-                        AddFileThreadMethod(di.GetFiles("*",SearchOption.AllDirectories));
+                        AddFileThreadMethod(di.GetFiles("*", SearchOption.AllDirectories));
                     }
                     return;
                 }
@@ -340,25 +547,11 @@ namespace JHoney_ImageConverter.ViewModel
                         LoadImageListAll.Add(new FileIOModel(files[iLoofCount]));
                     }
                 }
-                
-
-
-                //보내기
-                string[] TempProgressParam = new string[] { (iLoofCount + 1).ToString(), files.Count().ToString(), "Add Image..." };
-                msgData = new BaseMessageData("ProgressLoading", 3, TempProgressParam);
-                Messenger.Default.Send<BaseMessageData>(msgData);
             }
-
-            msgData2 = new MessengerMain("ProgressLoading", "false", null, null);
-            Messenger.Default.Send<MessengerMain>(msgData2);
-
             MaxPage = (LoadImageListAll.Count() / PagingSize) + 1;
-            PageListExtract("");
         }
         private void AddFileThreadMethod(FileInfo[] files)
         {
-            BaseMessageData msgData;
-            MessengerMain msgData2;
             for (int iLoofCount = 0; iLoofCount < files.Count(); iLoofCount++)
             {
                 if (files[iLoofCount].Extension != ".db")
@@ -370,69 +563,14 @@ namespace JHoney_ImageConverter.ViewModel
                     }
                     //LoadImageListAll.Add(new FileIOModel(files[iLoofCount].FullName));
                 }
-                //보내기
-                string[] TempProgressParam = new string[] { (iLoofCount + 1).ToString(), files.Count().ToString(), "Add Image..." };
-                msgData = new BaseMessageData("ProgressLoading", 3, TempProgressParam);
-                Messenger.Default.Send<BaseMessageData>(msgData);
-            }
 
-            msgData2 = new MessengerMain("ProgressLoading", "false", null, null);
-            Messenger.Default.Send<MessengerMain>(msgData2);
+            }
 
             MaxPage = (LoadImageListAll.Count() / PagingSize) + 1;
             PageListExtract("");
-        }
-        void PageListExtract(string findPageCommand)
-        {
-            if (findPageCommand == "First")
-            {
-                CurrentPage = 1;
-                //var k = LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize);
-                LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
-                MakeThumbnailandList(LoadImageListCurrent);
-                return;
-            }
-
-            if (findPageCommand == "Last")
-            {
-                CurrentPage = MaxPage;
-                LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
-                MakeThumbnailandList(LoadImageListCurrent);
-                return;
-            }
-
-            if (findPageCommand == "Next")
-            {
-                if (LoadImageListAll.Count < (CurrentPage) * PagingSize)
-                {
-
-                    return;
-                }
-            }
-            else if (findPageCommand == "Back")
-            {
-                if (CurrentPage <= 1)
-                {
-
-                    return;
-                }
-            }
-
-            if (findPageCommand == "Next")
-            {
-                CurrentPage++;
-            }
-            else if (findPageCommand == "Back")
-            {
-                CurrentPage--;
-            }
-            if (LoadImageListCurrent.Count > 0)
-            {
-                LoadImageListCurrent.Clear();
-            }
-
-            LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
-            MakeThumbnailandList(LoadImageListCurrent);
+            ListNumRefresh();
+            _mainWindowViewModel.IsEnabled = true;
+            _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Collapsed;
         }
         private void OnCommandSetPage(object param)
         {
@@ -473,87 +611,35 @@ namespace JHoney_ImageConverter.ViewModel
             }
             PageListExtract(param.ToString());
             ListNumRefresh();
-        }
-        void ListNumRefresh()
-        {
-            SelectNumPageList.Clear();
-            int TempPage = (((CurrentPage - 1) / 5) * 5) + 1;
-            for (int iLoofCount = 0; iLoofCount < 5; iLoofCount++)
+
+            if (BoolSelectImageView)
             {
-                if ((TempPage + iLoofCount) <= MaxPage)
+                _mainWindowViewModel.IsEnabled = false;
+                _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+
+                ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
+                for (int i = 0; i < LoadImageListCurrent.Count; i++)
                 {
-                    SelectNumPageList.Add(new PagingButtonModel() { PageNum = (TempPage + iLoofCount).ToString(), IsEnabled = true });
+                    if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
+                    {
+                        NoThumbTemp.Add(LoadImageListCurrent[i]);
+                    }
                 }
-            }
-            var a = from b in SelectNumPageList
-                    where b.PageNum == (CurrentPage).ToString()
-                    select b;
-            if (a.Count() > 0)
-            {
-                int TempCount = SelectNumPageList.IndexOf(a.First());
-                SelectNumPageList[TempCount].IsEnabled = false;
-            }
 
-
+                AddFileThread = new Thread(() => MakeThumbnailandList(NoThumbTemp));
+                AddFileThread.Start();
+            }
         }
-
-        private void OnCommandLoaded(object param)
+        private void OnCommandSelectImage(SelectionChangedEventArgs e)
         {
-            if (param.GetType().Name == "ListBox")
-            {
-                ImageListBox = param as ListBox;
-                ImageListBox.SelectionMode = SelectionMode.Extended;
-            }
-
-
-
+            if (e.AddedItems.Count < 1) { return; }
+            _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo((e.AddedItems[0] as FileIOModel).FileName_Full);
         }
-        private void OnCommandSelectImage(object param)
-        {
-            if (ImageListBox.SelectedItems.Count == 1)
+        /*
+        private void OnMyCommand(object param)
             {
-                FileIOModel k = ImageListBox.SelectedItem as FileIOModel;
-                //보내기
-                MessengerImageGetSet msgData = new MessengerImageGetSet("Selected", k.FileName_Full);
-                Messenger.Default.Send<MessengerImageGetSet>(msgData);
             }
-        }
-
-        void MakeThumbnailandList(ObservableCollection<FileIOModel> TempList)
-        {
-            DirectoryInfo di = new DirectoryInfo(ThumbnailImgPath);
-            if (di.Exists == false)
-            {
-                di.Create();
-            }
-            for (int iLoofCount = 0; iLoofCount < TempList.Count; iLoofCount++)
-            {
-                Mat TempThumbnail = new Mat(TempList[iLoofCount].FileName_Full);
-                TempThumbnail = TempThumbnail.Resize(new OpenCvSharp.Size(100, 100));
-                TempThumbnail.ImWrite(ThumbnailImgPath + iLoofCount + ".png");
-
-                TempList[iLoofCount].ThumbnailBitmapImage = SetThumbnailBitmap(ThumbnailImgPath + iLoofCount + ".png");
-
-                TempThumbnail.Dispose();
-            }
-
-
-
-        }
-        BitmapImage SetThumbnailBitmap(string ImagePath)
-        {
-            BitmapImage b = new BitmapImage();
-            b.UriSource = null;
-            var stream = File.OpenRead(ImagePath);
-            b.BeginInit();
-            b.CacheOption = BitmapCacheOption.OnLoad;
-            b.StreamSource = stream;
-            b.EndInit();
-            stream.Close();
-            stream.Dispose();
-
-            return b;
-        }
+            */
         #endregion
 
     }

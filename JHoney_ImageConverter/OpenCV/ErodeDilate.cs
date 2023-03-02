@@ -19,6 +19,13 @@ namespace JHoney_ImageConverter.OpenCV
 
             SrcImage.Dispose();
         }
+        public Mat Erode(Mat matImage)
+        {
+            Mat mask = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3), new Point(1, 1));
+            Cv2.Erode(matImage, matImage, mask);
+            return matImage;
+        }
+
         public void Dilate(string SrcPath, string DstPath)
         {
             Mat SrcImage = new Mat(SrcPath, ImreadModes.Unchanged);
@@ -28,6 +35,13 @@ namespace JHoney_ImageConverter.OpenCV
             SrcImage.SaveImage(DstPath);
 
             SrcImage.Dispose();
+        }
+
+        public Mat Dilate(Mat matImage)
+        {
+            Mat mask = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3), new Point(1, 1));
+            Cv2.Dilate(matImage, matImage, mask);
+            return matImage;
         }
     }
 }

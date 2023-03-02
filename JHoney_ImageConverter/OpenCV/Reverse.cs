@@ -17,5 +17,10 @@ namespace JHoney_ImageConverter.OpenCV
 
             copyImage.Dispose();
         }
+
+        public Mat ImgReverse(Mat matImage)
+        {
+            return ~matImage;
+        }
     }
 }

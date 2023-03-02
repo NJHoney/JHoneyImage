@@ -4,37 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JHoney_ImageConverter.View"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
-             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:cvt="clr-namespace:JHoney_ImageConverter.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="5">
-        <Grid.Resources>
-            <ResourceDictionary>
-                <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/HamburgerMenuTemplate.xaml" />
-                </ResourceDictionary.MergedDictionaries>
-
-                <ObjectDataProvider x:Key="DisplayModeEnumValues"
-                                MethodName="GetValues"
-                                ObjectType="{x:Type Controls:SplitViewDisplayMode}">
-                    <ObjectDataProvider.MethodParameters>
-                        <x:Type TypeName="Controls:SplitViewDisplayMode" />
-                    </ObjectDataProvider.MethodParameters>
-                </ObjectDataProvider>
-
-                <ObjectDataProvider x:Key="VisibilityEnumValues"
-                                MethodName="GetValues"
-                                ObjectType="{x:Type Visibility}">
-                    <ObjectDataProvider.MethodParameters>
-                        <x:Type TypeName="Visibility" />
-                    </ObjectDataProvider.MethodParameters>
-                </ObjectDataProvider>
-
-            </ResourceDictionary>
-        </Grid.Resources>
+    <Grid Width="{Binding GridSplitterLength}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
@@ -46,36 +22,67 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <!--리스트패널-->
+        <!--제어패널-->
+        <Border Grid.Column="0" Grid.Row="0"  Visibility="{Binding OpenCloseVisibility}" BorderBrush="{DynamicResource MahApps.Brushes.Button.Border}" BorderThickness="1" Margin="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                
+                <StackPanel Grid.Column="0" Grid.Row="0" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Page Size : " VerticalAlignment="Center" Margin="5" />
+                    <mah:NumericUpDown Minimum="1" Value="{Binding PagingSize}" />
+                </StackPanel>
+                <StackPanel Grid.Column="0" Grid.Row="1" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Thumbnail Size : " VerticalAlignment="Center" Margin="5" />
+                    <mah:NumericUpDown Minimum="50" Interval="10" Value="{Binding ThumbNailSize}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="5" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.ExpanderHeader}"  Margin="5" IsChecked="{Binding BoolSelectImageView}" Command="{Binding CommandSelectMode}" CommandParameter="Image" Width="30" Height="30" >
+                        <iconPacks:PackIconBootstrapIcons Kind="FileImage" />
+                    </ToggleButton>
+                    <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.ExpanderHeader}" Margin="5" IsChecked="{Binding BoolSelectImageView, Converter={cvt:BoolInvertConverter}}" Command="{Binding CommandSelectMode}" CommandParameter="Grid" Width="30" Height="30" >
+                        <iconPacks:PackIconMaterial Kind="Table" />
+                    </ToggleButton>
+                </StackPanel>
+            </Grid>
+        </Border>
 
-        <ListBox x:Name="ImageListBox" Grid.Column="0" Grid.Row="1" AllowDrop="True" ItemsSource="{Binding LoadImageListCurrent}" Visibility="{Binding OpenCloseVisibility}" >
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Loaded">
-                    <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=ImageListBox, Mode=OneWay}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <cmd:EventToCommand Command="{Binding Path=CommandSelectImage}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseUp">
-                    <cmd:EventToCommand Command="{Binding Path=CommandSelectImage}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="Drop">
-                    <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Source="{Binding ThumbnailBitmapImage}" Margin="5" />
-                        <TextBlock Grid.Column="1" Width="120" Text="{Binding FileName_Safe}" Margin="5" TextWrapping="Wrap" VerticalAlignment="Center" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+
+        <!--리스트패널-->
+        <Grid Grid.Column="0" Grid.Row="1" Visibility="{Binding OpenCloseVisibility}" >
+            <ListBox x:Name="ImageListBox" ItemsSource="{Binding LoadImageListCurrent}" Visibility="{Binding ImageModeVisibility}" >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding Path=CommandSelectImage}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Image Grid.Column="0" Source="{Binding ThumbnailBitmapImage}" Margin="5" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <DataGrid ItemsSource="{Binding LoadImageListCurrent}" CanUserAddRows="False" AutoGenerateColumns="False" CanUserSortColumns="False" Visibility="{Binding ImageModeVisibility, Converter={cvt:VisibilityInvertConverter}}"  >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="FileName" Binding="{Binding FileName_Safe}" />
+                </DataGrid.Columns>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding Path=CommandSelectImage}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </DataGrid>
+        </Grid>
+
+
 
         <!--페이징패널-->
         <GroupBox Grid.Column="0" Grid.Row="2" Margin="5" Visibility="{Binding OpenCloseVisibility}">
@@ -95,7 +102,6 @@
                     </Button>
                 </StackPanel>
 
-
                 <ItemsControl x:Name="PagingNumBtn" Grid.Column="1" ItemsSource="{Binding SelectNumPageList}" >
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -108,9 +114,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-
-
-
 
                 <StackPanel Orientation="Horizontal" Grid.Column="2">
                     <Button Margin="5" Command="{Binding CommandSetPage}" CommandParameter="NextList">
@@ -127,27 +130,27 @@
         <!--컨트롤패널-->
         <GroupBox x:Name="CommandLine" Grid.Column="0" Grid.Row="3" Margin="5" Visibility="{Binding OpenCloseVisibility}">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                <Controls:SplitButton x:Name="splitButtonOpen" ItemsSource="{Binding FileOpenMenuList}" SelectedIndex="{Binding FileOpenSelectedIndex}" HorizontalAlignment="Center" Orientation="Vertical" Margin="5" >
-                    <Controls:SplitButton.Icon>
+                <mah:SplitButton x:Name="splitButtonOpen" ItemsSource="{Binding FileOpenMenuList}" SelectedIndex="{Binding FileOpenSelectedIndex}" HorizontalAlignment="Center" Orientation="Vertical" Margin="5" >
+                    <mah:SplitButton.Icon>
                         <iconPacks:PackIconModern Margin="6" Kind="Add" />
-                    </Controls:SplitButton.Icon>
+                    </mah:SplitButton.Icon>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <cmd:EventToCommand Command="{Binding Path=CommandOpenMenu}" PassEventArgsToCommand="True" />
+                            <i:InvokeCommandAction Command="{Binding Path=CommandOpenMenu}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </Controls:SplitButton>
+                </mah:SplitButton>
 
-                <Controls:SplitButton x:Name="splitButtonDel" ItemsSource="{Binding FileDelMenuList}" SelectedIndex="{Binding FileDelSelectedIndex}" HorizontalAlignment="Center" Orientation="Vertical" Margin="5" >
-                    <Controls:SplitButton.Icon>
+                <mah:SplitButton x:Name="splitButtonDel" ItemsSource="{Binding FileDelMenuList}" SelectedIndex="{Binding FileDelSelectedIndex}" HorizontalAlignment="Center" Orientation="Vertical" Margin="5" >
+                    <mah:SplitButton.Icon>
                         <iconPacks:PackIconModern Margin="6" Kind="Minus" />
-                    </Controls:SplitButton.Icon>
+                    </mah:SplitButton.Icon>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <cmd:EventToCommand Command="{Binding Path=CommandDelMenu}" PassEventArgsToCommand="True" />
+                            <i:InvokeCommandAction Command="{Binding Path=CommandDelMenu}" PassEventArgsToCommand="True" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </Controls:SplitButton>
+                </mah:SplitButton>
 
             </StackPanel>
         </GroupBox>

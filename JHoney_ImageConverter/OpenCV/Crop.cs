@@ -14,7 +14,7 @@ namespace JHoney_ImageConverter.OpenCV
             Mat rawImage = Cv2.ImRead(inputImgPath, ImreadModes.Unchanged);
             if(rawImage.Type().Channels==512)
             {
-                rawImage = Cv2.ImRead(inputImgPath, ImreadModes.GrayScale);
+                rawImage = Cv2.ImRead(inputImgPath, ImreadModes.Grayscale);
             }
             Mat croppedImage;
             Rect cropROI;

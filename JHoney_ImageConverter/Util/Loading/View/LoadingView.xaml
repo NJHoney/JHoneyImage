@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JHoney_ImageConverter.Util.Loading.View"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              Visibility="{Binding Visibility}"
              mc:Ignorable="d" 

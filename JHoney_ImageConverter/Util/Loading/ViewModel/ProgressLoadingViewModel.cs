@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
+﻿
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using System;
@@ -16,26 +16,26 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
         public int ProgressMin
         {
             get { return _progressMin; }
-            set { _progressMin = value; RaisePropertyChanged("ProgressMin"); }
+            set { _progressMin = value; OnPropertyChanged("ProgressMin"); }
         }
         private int _progressMin = 0;
         public int ProgressMax
         {
             get { return _progressMax; }
-            set { _progressMax = value; RaisePropertyChanged("ProgressMax"); }
+            set { _progressMax = value; OnPropertyChanged("ProgressMax"); }
         }
         private int _progressMax = 1;
 
         public int ProgressCurrent
         {
             get { return _progressCurrent; }
-            set { _progressCurrent = value; RaisePropertyChanged("ProgressCurrent"); }
+            set { _progressCurrent = value; OnPropertyChanged("ProgressCurrent"); }
         }
         private int _progressCurrent = 1;
         public string LoadingText
         {
             get { return _loadingText; }
-            set { _loadingText = value; RaisePropertyChanged("LoadingText"); }
+            set { _loadingText = value; OnPropertyChanged("LoadingText"); }
         }
         private string _loadingText = "Now Loading";
 
@@ -43,7 +43,7 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
         public string SubMessageText
         {
             get { return _subMessageText; }
-            set { _subMessageText = value; RaisePropertyChanged("SubMessageText"); }
+            set { _subMessageText = value; OnPropertyChanged("SubMessageText"); }
         }
         private string _subMessageText = "";
 
@@ -75,31 +75,6 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
         void InitEvent()
         {
 
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<BaseMessageData>(this, (msgData) =>
-            {
-                if (msgData.MessageId == "ProgressLoading")
-                {
-                    if (msgData.MessageValue == 0)
-                    {
-
-                    }
-                    else if (msgData.MessageValue == 1)
-                    {
-                        Visibility = System.Windows.Visibility.Visible;
-                    }
-                    else if (msgData.MessageValue == 2)
-                    {
-                        Visibility = System.Windows.Visibility.Collapsed;
-                    }
-                    else if (msgData.MessageValue == 3)
-                    {
-                        ProgressCurrent = int.Parse(msgData.MessageStrValue[0]);
-                        ProgressMax = int.Parse(msgData.MessageStrValue[1]);
-                        SubMessageText = msgData.MessageStrValue[2].ToString();
-                    }
-                }
-            });
         }
         #endregion
 
@@ -110,6 +85,11 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
 
             }
             */
+        public void SetProgress(int current,int maxValue)
+        {
+            ProgressCurrent = current;
+            ProgressMax = maxValue;
+        }
         #endregion
     }
 }

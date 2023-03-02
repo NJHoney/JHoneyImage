@@ -1,6 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.Util.Loading.ViewModel;
 using JHoney_ImageConverter.ViewModel.Base;
@@ -20,13 +18,13 @@ namespace JHoney_ImageConverter.ViewModel
     {
 
         #region 프로퍼티
-        Window parentWindow;
+        
         Thread ConvertWork;
         /*
         public int MyVariable
           {
               get { return _myVariable; }
-              set { _myVariable = value; RaisePropertyChanged("MyVariable"); }
+              set { _myVariable = value; OnPropertyChanged("MyVariable"); }
           }
           private int _myVariable;
           */
@@ -36,61 +34,71 @@ namespace JHoney_ImageConverter.ViewModel
         public ImageListViewModel ImageListViewModel
         {
             get { return _imageListViewModel; }
-            set { _imageListViewModel = value; RaisePropertyChanged("ImageListViewModel"); }
+            set { _imageListViewModel = value; OnPropertyChanged("ImageListViewModel"); }
         }
         private ImageListViewModel _imageListViewModel = new ImageListViewModel();
 
         public LoadingViewModel LoadingViewModel
         {
             get { return _loadingViewModel; }
-            set { _loadingViewModel = value; RaisePropertyChanged("LoadingViewModel"); }
+            set { _loadingViewModel = value; OnPropertyChanged("LoadingViewModel"); }
         }
         private LoadingViewModel _loadingViewModel = new LoadingViewModel();
 
         public ProgressLoadingViewModel ProgressLoadingViewModel
         {
             get { return _progressLoadingViewModel; }
-            set { _progressLoadingViewModel = value; RaisePropertyChanged("ProgressLoadingViewModel"); }
+            set { _progressLoadingViewModel = value; OnPropertyChanged("ProgressLoadingViewModel"); }
         }
         private ProgressLoadingViewModel _progressLoadingViewModel = new ProgressLoadingViewModel();
         public ImageConverterViewModel ImageConverterViewModel
         {
             get { return _imageConverterViewModel; }
-            set { _imageConverterViewModel = value; RaisePropertyChanged("ImageConverterViewModel"); }
+            set { _imageConverterViewModel = value; OnPropertyChanged("ImageConverterViewModel"); }
         }
         private ImageConverterViewModel _imageConverterViewModel = new ImageConverterViewModel();
 
         public ImagePatternMatchViewModel ImagePatternMatchViewModel
         {
             get { return _imagePatternMatchViewModel; }
-            set { _imagePatternMatchViewModel = value; RaisePropertyChanged("ImagePatternMatchViewModel"); }
+            set { _imagePatternMatchViewModel = value; OnPropertyChanged("ImagePatternMatchViewModel"); }
         }
         private ImagePatternMatchViewModel _imagePatternMatchViewModel = new ImagePatternMatchViewModel();
 
         public ImageDifferenceViewModel ImageDifferenceViewModel
         {
             get { return _imageDifferenceViewModel; }
-            set { _imageDifferenceViewModel = value; RaisePropertyChanged("ImageDifferenceViewModel"); }
+            set { _imageDifferenceViewModel = value; OnPropertyChanged("ImageDifferenceViewModel"); }
         }
         private ImageDifferenceViewModel _imageDifferenceViewModel = new ImageDifferenceViewModel();
 
         public ImageMuiltConvertViewModel ImageMuiltConvertViewModel
         {
             get { return _imageMuiltConvertViewModel; }
-            set { _imageMuiltConvertViewModel = value; RaisePropertyChanged("ImageMuiltConvertViewModel"); }
+            set { _imageMuiltConvertViewModel = value; OnPropertyChanged("ImageMuiltConvertViewModel"); }
         }
         private ImageMuiltConvertViewModel _imageMuiltConvertViewModel = new ImageMuiltConvertViewModel();
 
         public ImageDetectorViewModel ImageDetectorViewModel
         {
             get { return _imageDetectorViewModel; }
-            set { _imageDetectorViewModel = value; RaisePropertyChanged("ImageDetectorViewModel"); }
+            set { _imageDetectorViewModel = value; OnPropertyChanged("ImageDetectorViewModel"); }
         }
         private ImageDetectorViewModel _imageDetectorViewModel = new ImageDetectorViewModel();
 
         #endregion ---------------------------------------------------------------------------------
-
-
+        public double GridSplitterPreViewLength
+        {
+            get { return _gridSplitterPreViewLength; }
+            set { _gridSplitterPreViewLength = value; OnPropertyChanged("GridSplitterPreViewLength"); }
+        }
+        private double _gridSplitterPreViewLength = 220;
+        public GridLength GridSplitterLength
+        {
+            get { return _gridSplitterLength; }
+            set { _gridSplitterLength = value; OnPropertyChanged("GridSplitterLength"); }
+        }
+        private GridLength _gridSplitterLength = GridLength.Auto;
         #endregion
         #region 커맨드
         public RelayCommand<object> CloseCommand { get; private set; }
@@ -109,6 +117,7 @@ namespace JHoney_ImageConverter.ViewModel
         void InitData()
         {
             ImageConverterViewModel.Visibility = Visibility.Visible;
+            ImageListViewModel._mainWindowViewModel = this;
         }
 
         void InitCommand()
@@ -119,41 +128,8 @@ namespace JHoney_ImageConverter.ViewModel
 
         void InitEvent()
         {
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<MessengerMain>(this, (msgData) =>
-            {
-                if (msgData.MessageId == "Loading")
-                {
-                    if (msgData.MessageValue == "true")
-                    {
-                        OnOffLoading(true, "0");
-                    }
-                    else
-                    {
-                        OnOffLoading(false, "0");
-                    }
-                }
-                if (msgData.MessageId == "ProgressLoading")
-                {
-                    if (msgData.MessageValue == "true")
-                    {
-                        OnOffLoading(true, "1");
-                    }
-                    else
-                    {
-                        OnOffLoading(false, "1");
-                    }
-                }
-                if (msgData.MessageId == "MessageBox")
-                {
-                    FooMessage(msgData.MessageStrValue[0], msgData.MessageStrValue[1]);
-                }
-                if(msgData.MessageId == "StartConvert")
-                {
-                    ConvertWork = new Thread(()=> ConvertWorkThreadMethod(msgData.TempConvertList));
-                    ConvertWork.Start();
-                }
-            });
+            
+            
         }
         #endregion
 
@@ -162,18 +138,14 @@ namespace JHoney_ImageConverter.ViewModel
         {
             OnOffLoading(true, "1");
             IsEnabled = false;
-            string[] TempProgressParam;
-            TempProgressParam = new string[] { "0", ImageListViewModel.LoadImageListAll.Count.ToString(), "Initialize Inspect" };
-            BaseMessageData msgData = new BaseMessageData("ProgressLoading", 3, TempProgressParam);
+            
             for (int iLoofCount = 0; iLoofCount < ImageListViewModel.LoadImageListAll.Count; iLoofCount++)
             {
                 for (int jLoofCount = 0; jLoofCount < TempConvertList.Count; jLoofCount++)
                 {
                     RunConvertQueue(TempConvertList[jLoofCount].ConvertCommandName, ImageListViewModel.LoadImageListAll[iLoofCount].FileName_Full, ImageListViewModel.LoadImageListAll[iLoofCount].FileName_Full, TempConvertList[jLoofCount].ParamList);
                 }
-                TempProgressParam = new string[] { (iLoofCount + 1).ToString(), ImageListViewModel.LoadImageListAll.Count.ToString(), "Convert Image..." };
-                msgData = new BaseMessageData("ProgressLoading", 3, TempProgressParam);
-                Messenger.Default.Send<BaseMessageData>(msgData);
+                
             }
             IsEnabled = true;
             OnOffLoading(false, "1");
@@ -309,8 +281,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnCloseCommand(object param)
         {
-            parentWindow = Window.GetWindow((DependencyObject)param);
-            parentWindow.Close();
+            App.Current.Shutdown();
         }
 
 

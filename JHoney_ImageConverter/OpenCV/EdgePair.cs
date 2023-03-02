@@ -21,7 +21,7 @@ namespace JHoney_ImageConverter.OpenCV
         }
         public void imgTobinary(string inputImgPath, string outputImgPath, int threshold, int maxVal)
         {
-            Mat copyImage = Cv2.ImRead(inputImgPath, ImreadModes.GrayScale);
+            Mat copyImage = Cv2.ImRead(inputImgPath, ImreadModes.Grayscale);
 
             Cv2.Threshold(copyImage, copyImage, threshold, maxVal, ThresholdTypes.Binary);
 

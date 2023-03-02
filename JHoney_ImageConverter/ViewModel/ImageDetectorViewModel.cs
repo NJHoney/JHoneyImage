@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using JHoney_ImageConverter.Model;
+﻿using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using OpenCvSharp;
 using System;
@@ -21,14 +20,14 @@ namespace JHoney_ImageConverter.ViewModel
         public ImageControlModel ImageShow
         {
             get { return _imageShow; }
-            set { _imageShow = value; RaisePropertyChanged("ImageShow"); }
+            set { _imageShow = value; OnPropertyChanged("ImageShow"); }
         }
         private ImageControlModel _imageShow = new ImageControlModel();
         /*
         public int MyVariable
           {
               get { return _myVariable; }
-              set { _myVariable = value; RaisePropertyChanged("MyVariable"); }
+              set { _myVariable = value; OnPropertyChanged("MyVariable"); }
           }
           private int _myVariable;
           */
@@ -57,20 +56,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         void InitEvent()
         {
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<MessengerImageGetSet>(this, (msgData) =>
-            {
-                if (Visibility == System.Windows.Visibility.Visible)
-                {
-                    if (msgData.MessageId == "Selected")
-                    {
-                        File.Copy(msgData.MessageImagePath, tempImg, true);
-                        //UpdateImageInfo();
-
-                        ImageShow.ImageSourceUpdate(tempImg, "ImageBrush");
-                    }
-                }
-            });
+            
         }
         #endregion
 

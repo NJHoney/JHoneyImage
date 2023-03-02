@@ -11,11 +11,17 @@ namespace JHoney_ImageConverter.OpenCV
     {
         public void imgToGrayscale(string inputImgPath, string outputImgPath)
         {
-            Mat copyImage = Cv2.ImRead(inputImgPath, ImreadModes.GrayScale);
+            Mat copyImage = Cv2.ImRead(inputImgPath, ImreadModes.Grayscale);
 
             copyImage.ImWrite(outputImgPath);
 
             copyImage.Dispose();
+        }
+
+        public Mat imgToGrayscale(Mat matImage)
+        {
+            Cv2.CvtColor(matImage, matImage, ColorConversionCodes.BGR2GRAY);
+            return matImage;
         }
     }
 }

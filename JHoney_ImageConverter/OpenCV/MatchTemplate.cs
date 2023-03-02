@@ -1,6 +1,5 @@
 ﻿using JHoney_ImageConverter.Model;
 using OpenCvSharp;
-using OpenCvSharp.Cuda;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,9 +17,9 @@ namespace JHoney_ImageConverter.OpenCV
 
             int result_cols, result_rows;
 
-            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.GrayScale);
+            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.Grayscale);
 
-            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.GrayScale);
+            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.Grayscale);
 
 
             int cropWidth = MatchImage.Width;
@@ -110,9 +109,9 @@ namespace JHoney_ImageConverter.OpenCV
 
             int result_cols, result_rows;
 
-            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.GrayScale);
+            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.Grayscale);
             
-            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.GrayScale);
+            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.Grayscale);
             
 
             int cropWidth = MatchImage.Width;
@@ -208,8 +207,8 @@ namespace JHoney_ImageConverter.OpenCV
         public Rect DoMatchTemplateReturnROI(string rawImagePath, string targetImagePath)
         {
             int result_cols, result_rows;
-            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.GrayScale);
-            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.GrayScale);
+            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.Grayscale);
+            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.Grayscale);
 
             int cropWidth = MatchImage.Width;
             int cropHeight = MatchImage.Height;
@@ -249,8 +248,8 @@ namespace JHoney_ImageConverter.OpenCV
         {
             int result_cols, result_rows;
             Mat RawImage = Cv2.ImRead(rawImagePath, ImreadModes.Unchanged);
-            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.GrayScale);
-            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.GrayScale);
+            Mat SrcImage = Cv2.ImRead(rawImagePath, ImreadModes.Grayscale);
+            Mat MatchImage = Cv2.ImRead(targetImagePath, ImreadModes.Grayscale);
 
             int cropWidth = MatchImage.Width;
             int cropHeight = MatchImage.Height;

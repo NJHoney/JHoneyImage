@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace JHoney_ImageConverter.Util
         public RelayCommand<KeyEventArgs> EventKeyDown { get; set; }
         public RelayCommand<KeyEventArgs> EventKeyUp { get; set; }
         public bool IsLeftCtrlDown { get; private set; }
+        public bool IsLeftShiftDonw { get; private set; }
         public KeyEventUtil()
         {
             EventKeyDown = new RelayCommand<KeyEventArgs>(EventKeyDownOnImage);
@@ -27,10 +29,17 @@ namespace JHoney_ImageConverter.Util
             {
                 IsLeftCtrlDown = true;
             }
+            else if (Key.LeftShift== obj.Key)
+            {
+                IsLeftShiftDonw = true;
+            }
+            else
+            { }
         }
 
         public void EventKeyUpOnImage(KeyEventArgs obj)
         {
+            IsLeftShiftDonw = false;
             IsLeftCtrlDown = false;
         }
 

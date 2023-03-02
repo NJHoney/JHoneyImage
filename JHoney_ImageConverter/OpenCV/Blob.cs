@@ -11,15 +11,16 @@ namespace JHoney_ImageConverter.OpenCV
     {
         public void GetBlob(string inputPath, string outputPath)
         {
-            Mat src = new Mat(inputPath, ImreadModes.Unchanged);
-            OpenCvSharp.Blob.CvBlob blob = new OpenCvSharp.Blob.CvBlob();
-            OpenCvSharp.Blob.CvBlobs blobs = new OpenCvSharp.Blob.CvBlobs(src);
-            blob = blobs.GreaterBlob();
-            Rect extendedROI = new Rect(blob.Rect.X - 20, blob.Rect.Y - 20, blob.Rect.Width + 40, blob.Rect.Height + 40);
-            Mat dst = src.Clone(extendedROI);
-            dst.SaveImage(outputPath);
-            src.Dispose();
-            dst.Dispose();
+            //OpenCvSharp.SimpleBlobDetector
+            //Mat src = new Mat(inputPath, ImreadModes.Unchanged);
+            //OpenCvSharp.Blob.CvBlob blob = new OpenCvSharp.Blob.CvBlob();
+            //OpenCvSharp.Blob.CvBlobs blobs = new OpenCvSharp.Blob.CvBlobs(src);
+            //blob = blobs.GreaterBlob();
+            //Rect extendedROI = new Rect(blob.Rect.X - 20, blob.Rect.Y - 20, blob.Rect.Width + 40, blob.Rect.Height + 40);
+            //Mat dst = src.Clone(extendedROI);
+            //dst.SaveImage(outputPath);
+            //src.Dispose();
+            //dst.Dispose();
         }
         public void TestBlob(string inputPath, string outputPath)
         {
@@ -42,8 +43,8 @@ namespace JHoney_ImageConverter.OpenCV
                 //Mat mask = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3), new Point(1, 1));
                 //
 
-                OpenCvSharp.Blob.CvBlob blob = new OpenCvSharp.Blob.CvBlob();
-                OpenCvSharp.Blob.CvBlobs blobs = new OpenCvSharp.Blob.CvBlobs(src);
+                //OpenCvSharp.Blob.CvBlob blob = new OpenCvSharp.Blob.CvBlob();
+                //OpenCvSharp.Blob.CvBlobs blobs = new OpenCvSharp.Blob.CvBlobs(src);
                 //var blobList = blobs.Where(x => x.Value.Rect.Width < 800
                 //&& x.Value.Rect.Height < 800
                 //&& x.Value.Rect.Width > 600
@@ -76,7 +77,7 @@ namespace JHoney_ImageConverter.OpenCV
                 //target.SaveImage(outputPath);
                 //var k = Cv2.FitEllipse(target);
                 //
-                Console.WriteLine(inputPath + " : " + blobs.Count);
+                //Console.WriteLine(inputPath + " : " + blobs.Count);
                 //Rect extendedROI = new Rect(newX, newY, newWidth, newHeight);
                 //Mat dst = new Mat(inputPath, ImreadModes.Color);
                 ////Mat Label = new Mat(@"E:\Suakit_work\160. 필옵틱스(SDC향)\original" + inputPath.Substring(inputPath.LastIndexOf("\\"), inputPath.Length - inputPath.LastIndexOf("\\")-4) + "_label.png");

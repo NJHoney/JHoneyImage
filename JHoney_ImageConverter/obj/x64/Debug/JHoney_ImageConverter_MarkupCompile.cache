@@ -4,17 +4,17 @@
 exe
 C#
 .cs
-F:\Project\JHoney_ImageConverter\JHoney_ImageConverter\obj\x64\Debug\
+D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\
 JHoney_ImageConverter
 none
 false
 DEBUG;TRACE
-F:\Project\JHoney_ImageConverter\JHoney_ImageConverter\App.xaml
-13-419220068
+D:\Project\JHoneyImage\JHoney_ImageConverter\App.xaml
+91766922928
+41277582935
+58-1908918001
+712140051635
+MainWindow.xaml;Util\Loading\View\LoadingView.xaml;Util\Loading\View\ProgressLoadingView.xaml;View\ImageConverterView.xaml;View\ImageDetectorView.xaml;View\ImageDifferenceView.xaml;View\ImageListView.xaml;View\ImageMuiltConvertView.xaml;View\ImagePatternMatchView.xaml;
 
-59-657839775
-78-747844842
-MainWindow.xaml;Resources\Icons.xaml;Resources\IconsNonShared.xaml;Themes\HamburgerMenu.xaml;Themes\HamburgerMenuTemplate.xaml;Util\Loading\View\LoadingView.xaml;Util\Loading\View\ProgressLoadingView.xaml;View\ImageConverterView.xaml;View\ImageDetectorView.xaml;View\ImageDifferenceView.xaml;View\ImageListView.xaml;View\ImageMuiltConvertView.xaml;View\ImagePatternMatchView.xaml;
-
-True
+False
 

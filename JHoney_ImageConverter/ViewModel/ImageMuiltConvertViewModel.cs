@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using System;
@@ -19,7 +18,7 @@ namespace JHoney_ImageConverter.ViewModel
         public ObservableCollection<WorkListModel> WorkList
         {
             get { return _workList; }
-            set { _workList = value; RaisePropertyChanged("WorkList"); }
+            set { _workList = value; OnPropertyChanged("WorkList"); }
         }
         private ObservableCollection<WorkListModel> _workList = new ObservableCollection<WorkListModel>();
 
@@ -29,91 +28,91 @@ namespace JHoney_ImageConverter.ViewModel
         public bool ParamVisibility1
         {
             get { return _paramVisibility1; }
-            set { _paramVisibility1 = value; RaisePropertyChanged("ParamVisibility1"); }
+            set { _paramVisibility1 = value; OnPropertyChanged("ParamVisibility1"); }
         }
         private bool _paramVisibility1 = false;
 
         public bool ParamVisibility2
         {
             get { return _paramVisibility2; }
-            set { _paramVisibility2 = value; RaisePropertyChanged("ParamVisibility2"); }
+            set { _paramVisibility2 = value; OnPropertyChanged("ParamVisibility2"); }
         }
         private bool _paramVisibility2 = false;
 
         public bool ParamVisibility3
         {
             get { return _paramVisibility3; }
-            set { _paramVisibility3 = value; RaisePropertyChanged("ParamVisibility3"); }
+            set { _paramVisibility3 = value; OnPropertyChanged("ParamVisibility3"); }
         }
         private bool _paramVisibility3 = false;
 
         public bool ParamVisibility4
         {
             get { return _paramVisibility4; }
-            set { _paramVisibility4 = value; RaisePropertyChanged("ParamVisibility4"); }
+            set { _paramVisibility4 = value; OnPropertyChanged("ParamVisibility4"); }
         }
         private bool _paramVisibility4 = false;
 
         public string ParamText1
         {
             get { return _paramText1; }
-            set { _paramText1 = value; RaisePropertyChanged("ParamText1"); }
+            set { _paramText1 = value; OnPropertyChanged("ParamText1"); }
         }
         private string _paramText1 = "";
 
         public string ParamText2
         {
             get { return _paramText2; }
-            set { _paramText2 = value; RaisePropertyChanged("ParamText2"); }
+            set { _paramText2 = value; OnPropertyChanged("ParamText2"); }
         }
         private string _paramText2 = "";
 
         public string ParamText3
         {
             get { return _paramText3; }
-            set { _paramText3 = value; RaisePropertyChanged("ParamText3"); }
+            set { _paramText3 = value; OnPropertyChanged("ParamText3"); }
         }
         private string _paramText3 = "";
 
         public string ParamText4
         {
             get { return _paramText4; }
-            set { _paramText4 = value; RaisePropertyChanged("ParamText4"); }
+            set { _paramText4 = value; OnPropertyChanged("ParamText4"); }
         }
         private string _paramText4 = "";
 
         public string Param1
         {
             get { return _param1; }
-            set { _param1 = value; RaisePropertyChanged("Param1"); }
+            set { _param1 = value; OnPropertyChanged("Param1"); }
         }
         private string _param1 = "";
 
         public string Param2
         {
             get { return _param2; }
-            set { _param2 = value; RaisePropertyChanged("Param2"); }
+            set { _param2 = value; OnPropertyChanged("Param2"); }
         }
         private string _param2 = "";
 
         public string Param3
         {
             get { return _param3; }
-            set { _param3 = value; RaisePropertyChanged("Param3"); }
+            set { _param3 = value; OnPropertyChanged("Param3"); }
         }
         private string _param3 = "";
 
         public string Param4
         {
             get { return _param4; }
-            set { _param4 = value; RaisePropertyChanged("Param4"); }
+            set { _param4 = value; OnPropertyChanged("Param4"); }
         }
         private string _param4 = "";
         #endregion ---------------------------------------------------------------------------------
         public ObservableCollection<ImageConvertInfoModel> ConvertCommandList
         {
             get { return _convertCommandList; }
-            set { _convertCommandList = value; RaisePropertyChanged("ConvertCommandList"); }
+            set { _convertCommandList = value; OnPropertyChanged("ConvertCommandList"); }
         }
         private ObservableCollection<ImageConvertInfoModel> _convertCommandList = new ObservableCollection<ImageConvertInfoModel>();
 
@@ -170,8 +169,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnCommandRun(object param)
         {
-            MessengerMain msgData = new MessengerMain("StartConvert", "true", null, null, ConvertCommandList);
-            Messenger.Default.Send<MessengerMain>(msgData);
+            
         }
 
         private void OnAddCommand(object param)

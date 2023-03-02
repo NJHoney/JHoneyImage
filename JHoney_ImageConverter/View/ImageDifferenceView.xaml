@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:JHoney_ImageConverter.View"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:vc="clr-namespace:JHoney_ImageConverter.Converter"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              Visibility="{Binding Visibility}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -23,13 +22,13 @@
         </Grid.RowDefinitions>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="KeyDown">
-                <cmd:EventToCommand Command="{Binding ImageConvertViewModelKeyEvent.EventKeyDown}" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding ImageConvertViewModelKeyEvent.EventKeyDown}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="KeyUp">
-                <cmd:EventToCommand Command="{Binding ImageConvertViewModelKeyEvent.EventKeyUp}" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding ImageConvertViewModelKeyEvent.EventKeyUp}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="KeyUp">
-                <cmd:EventToCommand Command="{Binding }" PassEventArgsToCommand="True" />
+                <i:InvokeCommandAction Command="{Binding }" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
 
@@ -44,7 +43,7 @@
                     <DataGrid x:Name="DataGrid" ItemsSource="{Binding ImageInfoDataGridList}" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Loaded">
-                                <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=DataGrid, Mode=OneWay}" />
+                                <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=DataGrid, Mode=OneWay}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </DataGrid>
@@ -76,7 +75,7 @@
             <GroupBox x:Name="Pattern" Grid.Column="0" Grid.Row="0" Header="SrcImage Set" Margin="5" Background="{Binding PatternColor}" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
-                        <cmd:EventToCommand Command="{Binding Path=SelectPannelCommand}" CommandParameter="Src"/>
+                        <i:InvokeCommandAction Command="{Binding Path=SelectPannelCommand}" CommandParameter="Src"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Grid Margin="5" VerticalAlignment="Center">
@@ -89,16 +88,16 @@
                             </Canvas.LayoutTransform>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=PatternCanvas, Mode=OneWay}" />
+                                    <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=PatternCanvas, Mode=OneWay}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseMove">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="Drop">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                                    <i:InvokeCommandAction Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseWheel">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Canvas>
@@ -108,7 +107,7 @@
             <GroupBox x:Name="Target" Grid.Column="0" Grid.Row="1" Header="DstImage Set" Margin="5" Background="{Binding TargetColor}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDown">
-                        <cmd:EventToCommand Command="{Binding Path=SelectPannelCommand}" CommandParameter="Dst"/>
+                        <i:InvokeCommandAction Command="{Binding Path=SelectPannelCommand}" CommandParameter="Dst"/>
                     </i:EventTrigger>
                     
                 </i:Interaction.Triggers>
@@ -122,22 +121,22 @@
                             </Canvas.LayoutTransform>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=TargetCanvas, Mode=OneWay}" />
+                                    <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=TargetCanvas, Mode=OneWay}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseUp">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseDown">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseMove">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="Drop">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                                    <i:InvokeCommandAction Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseWheel">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </Canvas>
@@ -165,13 +164,13 @@
                             </Canvas.LayoutTransform>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Loaded">
-                                    <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=ResultCanvas, Mode=OneWay}" />
+                                    <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=ResultCanvas, Mode=OneWay}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseMove">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseWheel">
-                                    <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <Canvas.ContextMenu>
@@ -199,7 +198,7 @@
             <!--<TabControl x:Name="MainTabControl" Controls:TabControlHelper.Underlined="SelectedTabItem" TabStripPlacement="Right" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Loaded">
-                        <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=MainTabControl, Mode=OneWay}" />
+                        <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=MainTabControl, Mode=OneWay}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <Controls:MetroTabItem Header="SrcImage">
@@ -214,16 +213,16 @@
                                     </Canvas.LayoutTransform>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Loaded">
-                                            <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=PatternCanvas, Mode=OneWay}" />
+                                            <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=PatternCanvas, Mode=OneWay}" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseMove">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="Drop">
-                                            <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                                            <i:InvokeCommandAction Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseWheel">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Canvas>
@@ -243,22 +242,22 @@
                                     </Canvas.LayoutTransform>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Loaded">
-                                            <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=TargetCanvas, Mode=OneWay}" />
+                                            <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=TargetCanvas, Mode=OneWay}" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseUp">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseUp}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseDown">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseDown}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseMove">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="Drop">
-                                            <cmd:EventToCommand Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
+                                            <i:InvokeCommandAction Command="{Binding Path=CommandDropFile}" PassEventArgsToCommand="True" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseWheel">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Canvas>
@@ -288,13 +287,13 @@
                                     </Canvas.LayoutTransform>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Loaded">
-                                            <cmd:EventToCommand Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=ResultCanvas, Mode=OneWay}" />
+                                            <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=ResultCanvas, Mode=OneWay}" />
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseMove">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseMove}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="MouseWheel">
-                                            <cmd:EventToCommand Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
+                                            <i:InvokeCommandAction Command="{Binding Path=CanvasEventMouseWheel}" PassEventArgsToCommand="True"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                     <Canvas.ContextMenu>

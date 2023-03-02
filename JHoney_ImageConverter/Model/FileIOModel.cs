@@ -1,14 +1,15 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace JHoney_ImageConverter.Model
 {
-    class FileIOModel:ViewModelBase
+    class FileIOModel:ObservableRecipient
     {
         public FileIOModel() { }
         public FileIOModel(string FileFullPath)
@@ -20,14 +21,14 @@ namespace JHoney_ImageConverter.Model
         public BitmapImage ThumbnailBitmapImage
         {
             get { return _thumbnailBitmapImage; }
-            set { _thumbnailBitmapImage = value; RaisePropertyChanged("ThumbnailBitmapImage"); }
+            set { _thumbnailBitmapImage = value; OnPropertyChanged("ThumbnailBitmapImage"); }
         }
         private BitmapImage _thumbnailBitmapImage = new BitmapImage();
 
         public string ThumbnailPath
         {
             get { return _thumbnailPath; }
-            set { _thumbnailPath = value; RaisePropertyChanged("ThumbnailPath"); }
+            set { _thumbnailPath = value; OnPropertyChanged("ThumbnailPath"); }
         }
         private string _thumbnailPath = "";
 
@@ -35,7 +36,7 @@ namespace JHoney_ImageConverter.Model
         public bool IsSelected
         {
             get { return _isSelected; }
-            set { _isSelected = value; RaisePropertyChanged("IsSelected"); }
+            set { _isSelected = value; OnPropertyChanged("IsSelected"); }
         }
         private bool _isSelected = false;
 
@@ -46,7 +47,7 @@ namespace JHoney_ImageConverter.Model
         public string FileName_Full
         {
             get { return _fileNameFull; }
-            set { _fileNameFull = value; RaisePropertyChanged("FileNameFull"); }
+            set { _fileNameFull = value; OnPropertyChanged("FileNameFull"); }
         }
         private string _fileNameFull = "";
 
@@ -56,7 +57,7 @@ namespace JHoney_ImageConverter.Model
         public string FileName_Path
         {
             get { return _fileNamePath; }
-            set { _fileNamePath = value; RaisePropertyChanged("FileNamePath"); }
+            set { _fileNamePath = value; OnPropertyChanged("FileNamePath"); }
         }
         private string _fileNamePath = "";
 
@@ -66,7 +67,7 @@ namespace JHoney_ImageConverter.Model
         public string FileName_Safe
         {
             get { return _fileNameSafe; }
-            set { _fileNameSafe = value; RaisePropertyChanged("FileNameSafe"); }
+            set { _fileNameSafe = value; OnPropertyChanged("FileNameSafe"); }
         }
         private string _fileNameSafe = "";
 
@@ -76,7 +77,7 @@ namespace JHoney_ImageConverter.Model
         public string FileName_OnlyName
         {
             get { return _fileName_OnlyName; }
-            set { _fileName_OnlyName = value; RaisePropertyChanged("FileName_OnlyName"); }
+            set { _fileName_OnlyName = value; OnPropertyChanged("FileName_OnlyName"); }
         }
         private string _fileName_OnlyName = "";
 
@@ -86,7 +87,7 @@ namespace JHoney_ImageConverter.Model
         public string FileName_Extension
         {
             get { return _fileName_Extension; }
-            set { _fileName_Extension = value; RaisePropertyChanged("FileName_Extension"); }
+            set { _fileName_Extension = value; OnPropertyChanged("FileName_Extension"); }
         }
         private string _fileName_Extension = "";
         #endregion ---------------------------------------------------------------------------------

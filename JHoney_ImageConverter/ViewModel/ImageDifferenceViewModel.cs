@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.Util;
 using JHoney_ImageConverter.ViewModel.Base;
@@ -24,14 +23,14 @@ namespace JHoney_ImageConverter.ViewModel
         public DataGrid ImageInfoDataGrid
         {
             get { return _imageInfoDataGrid; }
-            set { _imageInfoDataGrid = value; RaisePropertyChanged("ImageInfoDataGrid"); }
+            set { _imageInfoDataGrid = value; OnPropertyChanged("ImageInfoDataGrid"); }
         }
         private DataGrid _imageInfoDataGrid = new DataGrid();
 
         public TabControl MainTabControl
         {
             get { return _mainTabControl; }
-            set { _mainTabControl = value; RaisePropertyChanged("MainTabControl"); }
+            set { _mainTabControl = value; OnPropertyChanged("MainTabControl"); }
         }
         private TabControl _mainTabControl = new TabControl();
 
@@ -40,21 +39,21 @@ namespace JHoney_ImageConverter.ViewModel
         System.Windows.Point CurrentMousePoint
         {
             get { return _currentMousePoint; }
-            set { _currentMousePoint = value; RaisePropertyChanged("CurrentMousePoint"); }
+            set { _currentMousePoint = value; OnPropertyChanged("CurrentMousePoint"); }
         }
         private System.Windows.Point _currentMousePoint = new System.Windows.Point();
 
         public ObservableCollection<ImageInfoModel> ImageInfoDataGridList
         {
             get { return _imageInfoDataGridList; }
-            set { _imageInfoDataGridList = value; RaisePropertyChanged("ImageInfoDataGridList"); }
+            set { _imageInfoDataGridList = value; OnPropertyChanged("ImageInfoDataGridList"); }
         }
         private ObservableCollection<ImageInfoModel> _imageInfoDataGridList = new ObservableCollection<ImageInfoModel>();
 
         public ImageInfoModel ImageInfoDataGridModel
         {
             get { return _imageInfoDataGridModel; }
-            set { _imageInfoDataGridModel = value; RaisePropertyChanged("ImageInfoDataGridModel"); }
+            set { _imageInfoDataGridModel = value; OnPropertyChanged("ImageInfoDataGridModel"); }
         }
         private ImageInfoModel _imageInfoDataGridModel = new ImageInfoModel();
 
@@ -67,7 +66,7 @@ namespace JHoney_ImageConverter.ViewModel
         public ImageControlModel PatternImageShow
         {
             get { return _patternImageShow; }
-            set { _patternImageShow = value; RaisePropertyChanged("PatternImageShow"); }
+            set { _patternImageShow = value; OnPropertyChanged("PatternImageShow"); }
         }
         private ImageControlModel _patternImageShow = new ImageControlModel();
 
@@ -81,7 +80,7 @@ namespace JHoney_ImageConverter.ViewModel
         public ImageControlModel TargetImageShow
         {
             get { return _targetImageShow; }
-            set { _targetImageShow = value; RaisePropertyChanged("TargetImageShow"); }
+            set { _targetImageShow = value; OnPropertyChanged("TargetImageShow"); }
         }
         private ImageControlModel _targetImageShow = new ImageControlModel();
 
@@ -94,7 +93,7 @@ namespace JHoney_ImageConverter.ViewModel
         public ImageControlModel ResultImageShow
         {
             get { return _resultImageShow; }
-            set { _resultImageShow = value; RaisePropertyChanged("ResultImageShow"); }
+            set { _resultImageShow = value; OnPropertyChanged("ResultImageShow"); }
         }
         private ImageControlModel _resultImageShow = new ImageControlModel();
 
@@ -102,14 +101,14 @@ namespace JHoney_ImageConverter.ViewModel
         public ObservableCollection<OpenCvSharp.Rect> ResultRectList
         {
             get { return _resultRectList; }
-            set { _resultRectList = value; RaisePropertyChanged("ResultRectList"); }
+            set { _resultRectList = value; OnPropertyChanged("ResultRectList"); }
         }
         private ObservableCollection<OpenCvSharp.Rect> _resultRectList = new ObservableCollection<OpenCvSharp.Rect>();
 
         public DataGrid ResultInfoDataGrid
         {
             get { return _resultInfoDataGrid; }
-            set { _resultInfoDataGrid = value; RaisePropertyChanged("ResultInfoDataGrid"); }
+            set { _resultInfoDataGrid = value; OnPropertyChanged("ResultInfoDataGrid"); }
         }
         private DataGrid _resultInfoDataGrid = new DataGrid();
         #endregion ---------------------------------------------------------------------------------
@@ -118,13 +117,13 @@ namespace JHoney_ImageConverter.ViewModel
         public bool IsSelectRectangle
         {
             get { return _isSelectRectangle; }
-            set { _isSelectRectangle = value; RaisePropertyChanged("IsSelectRectangle"); }
+            set { _isSelectRectangle = value; OnPropertyChanged("IsSelectRectangle"); }
         }
         private bool _isSelectRectangle = false;
         public bool IsStartRect
         {
             get { return _isStartRect; }
-            set { _isStartRect = value; RaisePropertyChanged("IsStartRect"); }
+            set { _isStartRect = value; OnPropertyChanged("IsStartRect"); }
         }
         private bool _isStartRect = false;
         public double StartRectPointX
@@ -133,7 +132,7 @@ namespace JHoney_ImageConverter.ViewModel
             set
             {
                 _startRectPointX = value;
-                RaisePropertyChanged("StartRectPointX");
+                OnPropertyChanged("StartRectPointX");
             }
         }
         private double _startRectPointX = 0;
@@ -143,7 +142,7 @@ namespace JHoney_ImageConverter.ViewModel
             get { return _startRectPointY; }
             set
             {
-                _startRectPointY = value; RaisePropertyChanged("StartRectPointY");
+                _startRectPointY = value; OnPropertyChanged("StartRectPointY");
             }
         }
         private double _startRectPointY = 0;
@@ -154,7 +153,7 @@ namespace JHoney_ImageConverter.ViewModel
             set
             {
                 _endRectPointX = value;
-                RaisePropertyChanged("EndRectPointX");
+                OnPropertyChanged("EndRectPointX");
             }
         }
         private double _endRectPointX = 0;
@@ -165,7 +164,7 @@ namespace JHoney_ImageConverter.ViewModel
             set
             {
                 _endRectPointY = value;
-                RaisePropertyChanged("EndRectPointY");
+                OnPropertyChanged("EndRectPointY");
             }
         }
         private double _endRectPointY = 0;
@@ -173,27 +172,27 @@ namespace JHoney_ImageConverter.ViewModel
         public int RectWidth
         {
             get { return _rectWidth; }
-            set { _rectWidth = value; RaisePropertyChanged("RectWidth"); }
+            set { _rectWidth = value; OnPropertyChanged("RectWidth"); }
         }
         private int _rectWidth = 0;
 
         public int RectHeight
         {
             get { return _rectHeight; }
-            set { _rectHeight = value; RaisePropertyChanged("RectHeight"); }
+            set { _rectHeight = value; OnPropertyChanged("RectHeight"); }
         }
         private int _rectHeight = 0;
 
         public bool IsEndDrawRect
         {
             get { return _isEndDrawRect; }
-            set { _isEndDrawRect = value; RaisePropertyChanged("IsEndDrawRect"); }
+            set { _isEndDrawRect = value; OnPropertyChanged("IsEndDrawRect"); }
         }
         private bool _isEndDrawRect = false;
         System.Windows.Point StartMousePoint
         {
             get { return _startMousePoint; }
-            set { _startMousePoint = value; RaisePropertyChanged("StartMousePoint"); }
+            set { _startMousePoint = value; OnPropertyChanged("StartMousePoint"); }
         }
         private System.Windows.Point _startMousePoint = new System.Windows.Point();
         #endregion ---------------------------------------------------------------------------------
@@ -202,13 +201,13 @@ namespace JHoney_ImageConverter.ViewModel
         public SolidColorBrush PatternColor
         {
             get { return _patternColor; }
-            set { _patternColor = value; RaisePropertyChanged("PatternColor"); }
+            set { _patternColor = value; OnPropertyChanged("PatternColor"); }
         }
         private SolidColorBrush _patternColor = new SolidColorBrush(Colors.Red);
         public SolidColorBrush TargetColor
         {
             get { return _targetColor; }
-            set { _targetColor = value; RaisePropertyChanged("TargetColor"); }
+            set { _targetColor = value; OnPropertyChanged("TargetColor"); }
         }
         private SolidColorBrush _targetColor = new SolidColorBrush(Colors.Blue);
         #endregion
@@ -220,7 +219,7 @@ namespace JHoney_ImageConverter.ViewModel
         public KeyEventUtil ImageConvertViewModelKeyEvent
         {
             get { return _imageConvertViewModelKeyEvent; }
-            set { _imageConvertViewModelKeyEvent = value; RaisePropertyChanged("ImageConvertViewModelKeyEvent"); }
+            set { _imageConvertViewModelKeyEvent = value; OnPropertyChanged("ImageConvertViewModelKeyEvent"); }
         }
         private KeyEventUtil _imageConvertViewModelKeyEvent = new KeyEventUtil();
 
@@ -265,34 +264,7 @@ namespace JHoney_ImageConverter.ViewModel
         
         void InitEvent()
         {
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<MessengerImageGetSet>(this, (msgData) =>
-            {
-                if (Visibility == System.Windows.Visibility.Visible)
-                {
-                    if (msgData.MessageId == "Selected")
-                    {
-                        int index = -1;
-                        switch (IsSelectedPattern)
-                        {
-                            case true:
-                                index = 0;
-                                File.Copy(msgData.MessageImagePath, PatterntempImg, true);
-                                UpdateImageInfo(index);
-
-                                PatternImageShow.ImageSourceUpdate(PatterntempImg, "ImageBrush");
-                                break;
-                            case false:
-                                index = 1;
-                                File.Copy(msgData.MessageImagePath, TargettempImg, true);
-                                UpdateImageInfo(index);
-
-                                TargetImageShow.ImageSourceUpdate(TargettempImg, "ImageBrush");
-                                break;
-                        }
-                    }
-                }
-            });
+            
         }
         #endregion
 
@@ -626,10 +598,6 @@ namespace JHoney_ImageConverter.ViewModel
                                 PatternTempMat = new Mat(PatterntempImg, ImreadModes.Unchanged);
                                 PatternTempMat.SaveImage(Dialog.FileName);
 
-                                //보내기
-                                string[] TempMessage = { "Save", Dialog.SafeFileName + " : Save complete" };
-                                msgData = new MessengerMain("MessageBox", "", TempMessage);
-                                Messenger.Default.Send<MessengerMain>(msgData);
                                 break;
 
                             case 1:
@@ -654,19 +622,13 @@ namespace JHoney_ImageConverter.ViewModel
                                     TargetTempMat.SaveImage(Dialog.FileName);
                                 }
 
-                                //보내기
-                                string[] TempMessage2 = { "Save", Dialog.SafeFileName + " : Save complete" };
-                                msgData = new MessengerMain("MessageBox", "", TempMessage2);
-                                Messenger.Default.Send<MessengerMain>(msgData);
+                                
                                 break;
                             case 2:
                                 ResultTempMat = new Mat(PatterntempImg, ImreadModes.Unchanged);
                                 ResultTempMat.SaveImage(Dialog.FileName);
 
-                                //보내기
-                                string[] TempMessage3 = { "Save", Dialog.SafeFileName + " : Save complete" };
-                                msgData = new MessengerMain("MessageBox", "", TempMessage3);
-                                Messenger.Default.Send<MessengerMain>(msgData);
+                                
                                 break;
                         }
                     }
@@ -676,9 +638,7 @@ namespace JHoney_ImageConverter.ViewModel
                     {
                         case 0:
                             PatternTempMat.SaveImage(tempImgPath + TempName + "_Pattern.png");
-                            //보내기
-                            msgData2 = new MessengerImageGetSet("ToList", tempImgPath + TempName + "_Pattern.png");
-                            Messenger.Default.Send<MessengerImageGetSet>(msgData2);
+                            
                             break;
                         case 1:
                             if (IsSelectRectangle)
@@ -698,15 +658,11 @@ namespace JHoney_ImageConverter.ViewModel
                             {
                                 TargetTempMat.SaveImage(tempImgPath + TempName + "_Target.png");
                             }
-                            //보내기
-                            msgData2 = new MessengerImageGetSet("ToList", tempImgPath + TempName + "_Target.png");
-                            Messenger.Default.Send<MessengerImageGetSet>(msgData2);
+                            
                             break;
                         case 2:
                             ResultTempMat.SaveImage(tempImgPath + TempName + "_Different.png");
-                            //보내기
-                            msgData2 = new MessengerImageGetSet("ToList", tempImgPath + TempName + "_Different.png");
-                            Messenger.Default.Send<MessengerImageGetSet>(msgData2);
+                            
                             break;
                     }
                     break;
@@ -721,7 +677,7 @@ namespace JHoney_ImageConverter.ViewModel
                     if (PatternTempMat.Type().Channels == 512)
                     {
                         PatternTempMat.Dispose();
-                        PatternTempMat = new Mat(PatterntempImg, ImreadModes.GrayScale);
+                        PatternTempMat = new Mat(PatterntempImg, ImreadModes.Grayscale);
                     }
                     ImageInfoDataGridModel.Image__Width = PatternTempMat.Width;
                     ImageInfoDataGridModel.Image__Height = PatternTempMat.Height;
@@ -734,7 +690,7 @@ namespace JHoney_ImageConverter.ViewModel
                     if (TargetTempMat.Type().Channels == 512)
                     {
                         TargetTempMat.Dispose();
-                        TargetTempMat = new Mat(TargettempImg, ImreadModes.GrayScale);
+                        TargetTempMat = new Mat(TargettempImg, ImreadModes.Grayscale);
                     }
                     ImageInfoDataGridModel.Image__Width = TargetTempMat.Width;
                     ImageInfoDataGridModel.Image__Height = TargetTempMat.Height;
@@ -760,19 +716,14 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnCommandDifference(object param)
         {
-            MessengerMain msgData;
             if (PatternTempMat.Size() != TargetTempMat.Size())
             {
-                string[] TempMessage = { "Error", "Size Difference" };
-                msgData = new MessengerMain("MessageBox", "", TempMessage);
-                Messenger.Default.Send<MessengerMain>(msgData);
+                
                 return;
             }
             if(PatternTempMat.Channels()!= TargetTempMat.Channels())
             {
-                string[] TempMessage = { "Error", "Channel Difference" };
-                msgData = new MessengerMain("MessageBox", "", TempMessage);
-                Messenger.Default.Send<MessengerMain>(msgData);
+                
                 return;
             }
             Cv2.Absdiff(PatternTempMat, TargetTempMat, ResultTempMat);

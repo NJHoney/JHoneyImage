@@ -1,5 +1,5 @@
-﻿using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+﻿
+using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using System;
@@ -19,21 +19,21 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
         public Canvas MainCanvas
         {
             get { return _mainCanvas; }
-            set { _mainCanvas = value; RaisePropertyChanged("MainCanvas"); }
+            set { _mainCanvas = value; OnPropertyChanged("MainCanvas"); }
         }
         private Canvas _mainCanvas = new Canvas();
 
         public double CanvasRotateTransform
         {
             get { return _canvasRotateTransform; }
-            set { _canvasRotateTransform = value; RaisePropertyChanged("CanvasRotateTransform"); }
+            set { _canvasRotateTransform = value; OnPropertyChanged("CanvasRotateTransform"); }
         }
         private double _canvasRotateTransform = 0;
 
         public string LoadingText
         {
             get { return _loadingText; }
-            set { _loadingText = value; RaisePropertyChanged("LoadingText"); }
+            set { _loadingText = value; OnPropertyChanged("LoadingText"); }
         }
         private string _loadingText = "Now Loading";
 
@@ -62,31 +62,6 @@ namespace JHoney_ImageConverter.Util.Loading.ViewModel
 
         void InitEvent()
         {
-
-            //받기(이벤트로 등록)
-            Messenger.Default.Register<BaseMessageData>(this, (msgData) =>
-            {
-                if (msgData.MessageId == "Loading")
-                {
-                    if (msgData.MessageValue == 0)
-                    {
-
-                    }
-                    else if (msgData.MessageValue == 1)
-                    {
-                        Visibility = System.Windows.Visibility.Visible;
-                    }
-                    else if (msgData.MessageValue == 2)
-                    {
-                        Visibility = System.Windows.Visibility.Collapsed;
-                    }
-                }
-                else if (msgData.MessageId == "Close")
-                {
-                }
-            });
-
-
 
         }
         #endregion

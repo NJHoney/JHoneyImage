@@ -21,7 +21,7 @@ namespace JHoney_ImageConverter.OpenCV
         }
         public void cannyToImage(string inputPath, string outputPath, int threshold1)
         {
-            Mat copyImage = Cv2.ImRead(inputPath, ImreadModes.GrayScale);
+            Mat copyImage = Cv2.ImRead(inputPath, ImreadModes.Grayscale);
             Cv2.Canny(copyImage, copyImage, threshold1, threshold1 * 3);
             copyImage.ImWrite(outputPath);
         }

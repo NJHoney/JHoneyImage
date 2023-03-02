@@ -26,9 +26,6 @@ namespace JHoney_ImageConverter
         {
             InitializeComponent();
 
-            GalaSoft.MvvmLight.Threading.DispatcherHelper.Initialize();
-            
-
         }
     }
 }
