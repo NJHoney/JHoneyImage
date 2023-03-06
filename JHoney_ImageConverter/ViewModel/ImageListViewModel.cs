@@ -2,6 +2,7 @@
 using JHoney_ImageConverter.Model;
 using JHoney_ImageConverter.ViewModel.Base;
 using MahApps.Metro.Controls;
+using Microsoft.Win32;
 using OpenCvSharp;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace JHoney_ImageConverter.ViewModel
@@ -22,7 +25,9 @@ namespace JHoney_ImageConverter.ViewModel
     class ImageListViewModel : CustomViewModelBase
     {
         public MainWindowViewModel _mainWindowViewModel;
-        Thread AddFileThread;
+        public Thread AddFileThread;
+        bool preventRepeat = false;
+        bool isRefresh = false;
         #region 프로퍼티
         #region ---［ Pagging ］---------------------------------------------------------------------
         public int CurrentPage
@@ -136,6 +141,12 @@ namespace JHoney_ImageConverter.ViewModel
         }
         private ObservableCollection<FileIOModel> _loadImageListCurrent = new ObservableCollection<FileIOModel>();
 
+        public FileIOModel LastSelectedItem
+        {
+            get { return _lastSelectedItem; }
+            set { _lastSelectedItem = value; OnPropertyChanged("LastSelectedItem"); }
+        }
+        private FileIOModel _lastSelectedItem;
         public string OpenCloseText
         {
             get { return _openCloseText; }
@@ -149,6 +160,8 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<object> CommandOpenMenu { get; private set; }
         public RelayCommand<object> CommandSetPage { get; private set; }
         public RelayCommand<SelectionChangedEventArgs> CommandSelectImage { get; private set; }
+        public RelayCommand<MouseEventArgs> ListBoxPreviewMouseDown { get; private set; }
+        
         #endregion
 
         #region 초기화
@@ -178,9 +191,9 @@ namespace JHoney_ImageConverter.ViewModel
             CommandOpenMenu = new RelayCommand<object>((param) => OnCommandOpenMenu(param));
             CommandSetPage = new RelayCommand<object>((param) => OnCommandSetPage(param));
             CommandSelectImage = new RelayCommand<SelectionChangedEventArgs>((e) => OnCommandSelectImage(e));
+
+            ListBoxPreviewMouseDown= new RelayCommand<MouseEventArgs>((e) => OnListBoxPreviewMouseDown(e));
         }
-
-
 
         void InitEvent()
         {
@@ -308,7 +321,7 @@ namespace JHoney_ImageConverter.ViewModel
                     break;
             }
         }
-        void MakeThumbnailandList(ObservableCollection<FileIOModel> TempList)
+        public void MakeThumbnailandList(ObservableCollection<FileIOModel> TempList)
         {
 
             for (int iLoofCount = 0; iLoofCount < TempList.Count; iLoofCount++)
@@ -371,7 +384,7 @@ namespace JHoney_ImageConverter.ViewModel
 
             //return b;
         }
-        void PageListExtract(string findPageCommand)
+        public void PageListExtract(string findPageCommand)
         {
             if (findPageCommand == "First")
             {
@@ -525,7 +538,7 @@ namespace JHoney_ImageConverter.ViewModel
             }
         }
 
-        private void AddFileThreadMethod(string[] files)
+        public void AddFileThreadMethod(string[] files)
         {
             for (int iLoofCount = 0; iLoofCount < files.Count(); iLoofCount++)
             {
@@ -630,10 +643,50 @@ namespace JHoney_ImageConverter.ViewModel
                 AddFileThread.Start();
             }
         }
-        private void OnCommandSelectImage(SelectionChangedEventArgs e)
+        private async void OnCommandSelectImage(SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count < 1) { return; }
-            _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo((e.AddedItems[0] as FileIOModel).FileName_Full);
+
+            if(_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible) { LastSelectedItem = (e.AddedItems[0] as FileIOModel); _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo(LastSelectedItem.FileName_Full); }
+            if (_mainWindowViewModel.SegmentationLabelViewModel.Visibility == Visibility.Visible)
+            {
+                if(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0)
+                {
+                    if(preventRepeat)
+                    {
+                        preventRepeat = false;
+                        return;
+                    }
+                    var result = await _mainWindowViewModel.FooMessage("Label clear?", "If you click OK button, clear all label in previous image.", MahApps.Metro.Controls.Dialogs.MessageDialogStyle.AffirmativeAndNegative);
+                    if(result == MahApps.Metro.Controls.Dialogs.MessageDialogResult.Affirmative)
+                    {
+                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
+                        LastSelectedItem = e.AddedItems[0] as FileIOModel;
+                    }
+                    else
+                    {
+                        preventRepeat = true;
+                        (e.Source as ListBox).SelectedItem = LastSelectedItem;
+                        return;
+                    }
+                }
+                _mainWindowViewModel.SegmentationLabelViewModel.UpdateImageInfo((e.AddedItems[0] as FileIOModel).FileName_Full);
+                LastSelectedItem = e.AddedItems[0] as FileIOModel;
+            }
+
+        }
+        private void OnListBoxPreviewMouseDown(MouseEventArgs e)
+        {
+            if(LastSelectedItem==null)
+            { return; }
+            if (_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible)
+            {
+                (e.Source as ListBox).SelectedItem = null;
+            }
+            if (_mainWindowViewModel.SegmentationLabelViewModel.Visibility == Visibility.Visible)
+            {
+                (e.Source as ListBox).SelectedItem = null;
+            }
         }
         /*
         private void OnMyCommand(object param)

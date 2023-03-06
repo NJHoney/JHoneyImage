@@ -82,7 +82,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <RadioButton Content="{Binding .Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" >
+                                <RadioButton Content="{Binding Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" >
                                     <!--<i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Checked">
                                             <i:InvokeCommandAction Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" />

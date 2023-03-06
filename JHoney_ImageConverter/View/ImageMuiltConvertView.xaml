@@ -31,13 +31,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <!--<RadioButton Content="{Binding .Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" >
-                                --><!--<i:Interaction.Triggers>
+                            <RadioButton Content="{Binding Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" CommandParameter="{Binding Header}" >
+                                <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding .Header}" />
+                                        <i:InvokeCommandAction Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding Header}" />
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>--><!--
-                            </RadioButton>-->
+                                </i:Interaction.Triggers>
+                            </RadioButton>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

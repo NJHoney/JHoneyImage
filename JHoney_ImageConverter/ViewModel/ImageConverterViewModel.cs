@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,7 @@ namespace JHoney_ImageConverter.ViewModel
 {
     class ImageConverterViewModel : CustomViewModelBase
     {
-        
+        public MainWindowViewModel _mainWindowViewModel;
         #region 프로퍼티
 
         #region ---［ OpenCV ］---------------------------------------------------------------------
@@ -343,6 +344,19 @@ namespace JHoney_ImageConverter.ViewModel
             else
             {
                 TempMat.SaveImage(tempImgPath + TempName + ".png");
+                _mainWindowViewModel.ImageListViewModel.LoadImageListCurrent.Clear();
+                _mainWindowViewModel.ImageListViewModel.SelectNumPageList.Clear();
+
+                _mainWindowViewModel.ImageListViewModel.AddFileThreadMethod(new string[1]{ tempImgPath + TempName + ".png"});
+                _mainWindowViewModel.ImageListViewModel.PageListExtract("");
+
+                if (_mainWindowViewModel.ImageListViewModel.BoolSelectImageView)
+                {
+                    _mainWindowViewModel.IsEnabled = false;
+                    _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                    _mainWindowViewModel.ImageListViewModel.AddFileThread = new Thread(() => _mainWindowViewModel.ImageListViewModel.MakeThumbnailandList(_mainWindowViewModel.ImageListViewModel.LoadImageListCurrent));
+                    _mainWindowViewModel.ImageListViewModel.AddFileThread.Start();
+                }
             }
 
 
@@ -554,11 +568,38 @@ namespace JHoney_ImageConverter.ViewModel
                             Mat TempROIMat = TempMat.Clone(new OpenCvSharp.Rect(DPICaclSingle(StartRectPointX), DPICaclSingle(StartRectPointY), DPICaclSingle(RectWidth), DPICaclSingle(RectHeight)));
                             TempROIMat.SaveImage(tempImgPath + TempName + ".png");
                             TempROIMat.Dispose();
+                            _mainWindowViewModel.ImageListViewModel.LoadImageListCurrent.Clear();
+                            _mainWindowViewModel.ImageListViewModel.SelectNumPageList.Clear();
+
+                            _mainWindowViewModel.ImageListViewModel.AddFileThreadMethod(new string[1] { tempImgPath + TempName + ".png" });
+                            _mainWindowViewModel.ImageListViewModel.PageListExtract("");
+
+                            if (_mainWindowViewModel.ImageListViewModel.BoolSelectImageView)
+                            {
+                                _mainWindowViewModel.IsEnabled = false;
+                                _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                                _mainWindowViewModel.ImageListViewModel.AddFileThread = new Thread(() => _mainWindowViewModel.ImageListViewModel.MakeThumbnailandList(_mainWindowViewModel.ImageListViewModel.LoadImageListCurrent));
+                                _mainWindowViewModel.ImageListViewModel.AddFileThread.Start();
+                            }
+
                         }
                     }
                     else
                     {
                         TempMat.SaveImage(tempImgPath + TempName + ".png");
+                        _mainWindowViewModel.ImageListViewModel.LoadImageListCurrent.Clear();
+                        _mainWindowViewModel.ImageListViewModel.SelectNumPageList.Clear();
+
+                        _mainWindowViewModel.ImageListViewModel.AddFileThreadMethod(new string[1] { tempImgPath + TempName + ".png" });
+                        _mainWindowViewModel.ImageListViewModel.PageListExtract("");
+
+                        if (_mainWindowViewModel.ImageListViewModel.BoolSelectImageView)
+                        {
+                            _mainWindowViewModel.IsEnabled = false;
+                            _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                            _mainWindowViewModel.ImageListViewModel.AddFileThread = new Thread(() => _mainWindowViewModel.ImageListViewModel.MakeThumbnailandList(_mainWindowViewModel.ImageListViewModel.LoadImageListCurrent));
+                            _mainWindowViewModel.ImageListViewModel.AddFileThread.Start();
+                        }
                     }
 
                     
@@ -707,23 +748,23 @@ namespace JHoney_ImageConverter.ViewModel
                     
                     if(wratio==hratio)
                     {
-                        TempMat = TempMat.Resize(new OpenCvSharp.Size(DPICaclSingle(RectWidth), DPICaclSingle(RectHeight)), interpolation: InterpolationFlags.Cubic);
+                        TempMat = TempMat.Resize(new OpenCvSharp.Size(RatioResizeSize,RatioResizeSize ), interpolation: InterpolationFlags.Cubic);
                     }
                     else if(wratio>hratio)
                     {
                         Mat RatioMat = TempMat.Clone();
                         RatioMat = RatioMat.Resize(new OpenCvSharp.Size(TempMat.Width*hratio,TempMat.Height*hratio));
-                        TempMat = Mat.Zeros(new OpenCvSharp.Size(RatioResizeSize, RatioResizeSize), MatType.CV_8UC3);
-                        OpenCvSharp.Rect ROI = new OpenCvSharp.Rect((RatioResizeSize/2)-(int)((TempMat.Width*hratio)/2), 0, (int)((TempMat.Width * hratio) / 2), RatioResizeSize);
+                        TempMat = Mat.Zeros(new OpenCvSharp.Size(RatioResizeSize, RatioResizeSize), TempMat.Type());
+                        Mat ROI = new Mat(TempMat, new OpenCvSharp.Rect((RatioResizeSize / 2) - (int)((RatioMat.Width) / 2),0, (int)(RatioMat.Width),RatioResizeSize));
+                        RatioMat.CopyTo(ROI);
                     }
                     else if (wratio < hratio)
                     {
                         Mat RatioMat = TempMat.Clone();
                         RatioMat = RatioMat.Resize(new OpenCvSharp.Size(TempMat.Width * wratio, TempMat.Height * wratio));
-                        TempMat = Mat.Zeros(new OpenCvSharp.Size(RatioResizeSize, RatioResizeSize), MatType.CV_8UC3);
-                        Mat ROI = TempMat.Clone(new OpenCvSharp.Rect((RatioResizeSize / 2) - (int)((TempMat.Width * wratio) / 2), 0, (int)((TempMat.Width * wratio) / 2), RatioResizeSize));
-                        ROI = RatioMat.Clone();
-
+                        TempMat = Mat.Zeros(new OpenCvSharp.Size(RatioResizeSize, RatioResizeSize), TempMat.Type());
+                        Mat ROI = new Mat(TempMat, new OpenCvSharp.Rect(0, (RatioResizeSize / 2) - (int)((RatioMat.Height) / 2), RatioResizeSize, (int)(RatioMat.Height)));
+                        RatioMat.CopyTo(ROI);
                     }
 
                     UpdateImageInfo(TempMat);

@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Project\JHoneyImage\JHoney_ImageConverter\App.xaml
-91766922928
+111447344118
 41277582935
-58-1908918001
+62-307338341
 712140051635
-MainWindow.xaml;Util\Loading\View\LoadingView.xaml;Util\Loading\View\ProgressLoadingView.xaml;View\ImageConverterView.xaml;View\ImageDetectorView.xaml;View\ImageDifferenceView.xaml;View\ImageListView.xaml;View\ImageMuiltConvertView.xaml;View\ImagePatternMatchView.xaml;
+MainWindow.xaml;Util\CustomColorButton.xaml;Util\Loading\View\LoadingView.xaml;Util\Loading\View\ProgressLoadingView.xaml;View\ImageConverterView.xaml;View\ImageDetectorView.xaml;View\ImageDifferenceView.xaml;View\ImageListView.xaml;View\ImageMuiltConvertView.xaml;View\ImagePatternMatchView.xaml;View\SegmentationLabelView.xaml;
 
 False
 

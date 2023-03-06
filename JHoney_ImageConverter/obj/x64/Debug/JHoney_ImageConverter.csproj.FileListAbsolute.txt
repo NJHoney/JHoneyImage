@@ -331,3 +331,7 @@ D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.Extension
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.WpfExtensions.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\System.Drawing.Common.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\OpenCvSharp.Extensions.xml
+D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\View\SegmentationLabelView.g.cs
+D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\View\SegmentationLabelView.baml
+D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\Util\CustomColorButton.g.cs
+D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\Util\CustomColorButton.baml

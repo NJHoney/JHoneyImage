@@ -12,6 +12,8 @@
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         IsEnabled="{Binding IsEnabled}"
         mc:Ignorable="d"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        Dialog:DialogParticipation.Register="{Binding}"
         UseNoneWindowStyle="True"
         WindowState="Maximized"
         Title="JHoney" Height="350" Width="525">
@@ -60,6 +62,9 @@
                 <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Convert">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageSnow" />
                 </Button>
+                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Segmentation">
+                    <iconPacks:PackIconModern Kind="DrawBrush" />
+                </Button>
                 <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
                     <iconPacks:PackIconOcticons Width="20" Height="20" Kind="Search" />
                 </Button>
@@ -98,24 +103,21 @@
 
             <!--Test-->
             <View:ImageConverterView DataContext="{Binding ImageConverterViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            <View:SegmentationLabelView DataContext="{Binding SegmentationLabelViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
             <View:ImagePatternMatchView DataContext="{Binding ImagePatternMatchViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
             <View:ImageDifferenceView DataContext="{Binding ImageDifferenceViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
             <View:ImageMuiltConvertView DataContext="{Binding ImageMuiltConvertViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
             <View:ImageDetectorView DataContext="{Binding ImageDetectorViewModel}" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" />
+            
             <!--로그-->
 
         </Grid>
     </Grid>
-    <!--<Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl x:Name="MainFly">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Loaded">
-                    <i:InvokeCommandAction Command="{Binding LoadFlyout}" PassEventArgsToCommand="True" CommandParameter="{Binding Flyouts, ElementName=window}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <Controls:Flyout x:Name="Password" Position="Left" CloseButtonVisibility="Collapsed" TitleVisibility="Collapsed" IsOpen="True" >
-                <View:ImageListView DataContext="{Binding ImageListViewModel}" />
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts>-->
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="ColorCanvas" Position="Top" IsOpen="{Binding IsOpenColorPicker}" >
+                <mah:ColorCanvas SelectedColor="{Binding SelectedColor}" />
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
 </mah:MetroWindow>

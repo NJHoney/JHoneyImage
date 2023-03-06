@@ -11,24 +11,33 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace JHoney_ImageConverter.ViewModel
 {
     class MainWindowViewModel:CustomViewModelBase
     {
-
         #region 프로퍼티
         
         Thread ConvertWork;
-        /*
-        public int MyVariable
-          {
-              get { return _myVariable; }
-              set { _myVariable = value; OnPropertyChanged("MyVariable"); }
-          }
-          private int _myVariable;
-          */
+
+        public bool IsOpenColorPicker
+        {
+            get { return _isOpenColorPicker; }
+            set { _isOpenColorPicker = value; OnPropertyChanged("IsOpenColorPicker"); }
+        }
+        private bool _isOpenColorPicker = false;
+
+        public Color SelectedColor
+        {
+            get { return _selectedColor; }
+            set { _selectedColor = value; SegmentationLabelViewModel.InkCanvasInfo.DefaultDrawingAttributes.Color = value; SegmentationLabelViewModel.UpdateColor(); OnPropertyChanged("SelectedColor"); }
+        }
+        private Color _selectedColor = Color.FromArgb(255,0,0,0);
+
         private IDialogCoordinator _dialogCoordinator;
+
+
         #region ---［ ViewModel ］---------------------------------------------------------------------
 
         public ImageListViewModel ImageListViewModel
@@ -86,6 +95,13 @@ namespace JHoney_ImageConverter.ViewModel
         }
         private ImageDetectorViewModel _imageDetectorViewModel = new ImageDetectorViewModel();
 
+        public SegmentationLabelViewModel SegmentationLabelViewModel
+        {
+            get { return _segmentationLabelViewModel; }
+            set { _segmentationLabelViewModel = value; OnPropertyChanged("SegmentationLabelViewModel"); }
+        }
+        private SegmentationLabelViewModel _segmentationLabelViewModel = new SegmentationLabelViewModel();
+
         #endregion ---------------------------------------------------------------------------------
         public double GridSplitterPreViewLength
         {
@@ -118,6 +134,8 @@ namespace JHoney_ImageConverter.ViewModel
         {
             ImageConverterViewModel.Visibility = Visibility.Visible;
             ImageListViewModel._mainWindowViewModel = this;
+            ImageConverterViewModel._mainWindowViewModel = this;
+            SegmentationLabelViewModel.MainWindowViewModel=this;
         }
 
         void InitCommand()
@@ -212,6 +230,7 @@ namespace JHoney_ImageConverter.ViewModel
             ImageDifferenceViewModel.Visibility = Visibility.Collapsed;
             ImageMuiltConvertViewModel.Visibility = Visibility.Collapsed;
             ImageDetectorViewModel.Visibility = Visibility.Collapsed;
+            SegmentationLabelViewModel.Visibility = Visibility.Collapsed;
 
             switch(param.ToString())
             {
@@ -229,6 +248,9 @@ namespace JHoney_ImageConverter.ViewModel
                     break;
                 case "Detect":
                     ImageDetectorViewModel.Visibility = Visibility.Visible;
+                    break;
+                case "Segmentation":
+                    SegmentationLabelViewModel.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -284,7 +306,11 @@ namespace JHoney_ImageConverter.ViewModel
             App.Current.Shutdown();
         }
 
-
+        public async Task<MessageDialogResult> FooMessage(string title, string message, MessageDialogStyle messageDialogStyle)
+        {
+            var result = this._dialogCoordinator.ShowMessageAsync(this, title,message,messageDialogStyle);
+            return await result;
+        }
         #endregion
 
     }

@@ -251,6 +251,7 @@
     </ApplicationDefinition>
     <Compile Include="Converter\BoolenToVisibilityConverter.cs" />
     <Compile Include="Converter\BoolInvertConverter.cs" />
+    <Compile Include="Converter\ColorToBrushConverter.cs" />
     <Compile Include="Converter\FloatToInteger.cs" />
     <Compile Include="Converter\MultiBindingConverter.cs" />
     <Compile Include="Converter\VisibilityInvertConverter.cs" />
@@ -282,6 +283,9 @@
     <Compile Include="OpenCV\Resize.cs" />
     <Compile Include="OpenCV\Reverse.cs" />
     <Compile Include="OpenCV\Rotate.cs" />
+    <Compile Include="Util\CustomColorButton.xaml.cs">
+      <DependentUpon>CustomColorButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util\KeyEventUtil.cs" />
     <Compile Include="Util\Loading\ViewModel\LoadingViewModel.cs" />
     <Compile Include="Util\Loading\ViewModel\ProgressLoadingViewModel.cs" />
@@ -300,6 +304,7 @@
     <Compile Include="ViewModel\ImageMuiltConvertViewModel.cs" />
     <Compile Include="ViewModel\ImagePatternMatchViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\SegmentationLabelViewModel.cs" />
     <Compile Include="View\ImageConverterView.xaml.cs">
       <DependentUpon>ImageConverterView.xaml</DependentUpon>
     </Compile>
@@ -318,6 +323,9 @@
     <Compile Include="View\ImagePatternMatchView.xaml.cs">
       <DependentUpon>ImagePatternMatchView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SegmentationLabelView.xaml.cs">
+      <DependentUpon>SegmentationLabelView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -330,6 +338,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Util\CustomColorButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Util\Loading\View\LoadingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -359,6 +371,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ImagePatternMatchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SegmentationLabelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
