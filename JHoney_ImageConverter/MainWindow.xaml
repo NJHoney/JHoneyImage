@@ -45,38 +45,31 @@
             <!--뷰전환패널-->
             <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,5,5,5">
                 <StackPanel.Resources>
-                    <Style x:Key="AccentCircleButtonStyle"
-                           BasedOn="{StaticResource MahApps.Styles.Button.Circle}"
-                           TargetType="{x:Type ButtonBase}">
-                        <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}" />
+                    <Style x:Key="CustomRadioButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MahApps.Styles.Button.Circle}" >
                         <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Foreground" Value="{DynamicResource GrayBrush7}" />
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
                             </Trigger>
                         </Style.Triggers>
+                        <Setter Property="BorderThickness" Value="2"/>
                     </Style>
                 </StackPanel.Resources>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Convert">
+                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Convert" IsChecked="True">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageSnow" />
-                </Button>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Segmentation">
+                </RadioButton>
+                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Segmentation">
                     <iconPacks:PackIconModern Kind="DrawBrush" />
-                </Button>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
+                </RadioButton>
+                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
                     <iconPacks:PackIconOcticons Width="20" Height="20" Kind="Search" />
-                </Button>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Difference">
+                </RadioButton>
+                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Difference">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageMultiple" />
-                </Button>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="MuiltConvert">
+                </RadioButton>
+                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="MuiltConvert">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="SidebarLeftExpand" />
-                </Button>
-                <Button Width="48" Height="48" Margin="4" Style="{StaticResource AccentCircleButtonStyle}" Command="{Binding CommandSelectMenu}" CommandParameter="Detect">
-                    <iconPacks:PackIconMaterial Width="20" Height="20" Kind="FileFind" />
-                </Button>
+                </RadioButton>
+                
             </StackPanel>
             <!--Window컨트롤패널-->
             <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5" >

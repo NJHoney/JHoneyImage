@@ -19,6 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.TextFormatting;
 
 namespace JHoney_ImageConverter.ViewModel
 {
@@ -650,25 +651,63 @@ namespace JHoney_ImageConverter.ViewModel
             if(_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible) { LastSelectedItem = (e.AddedItems[0] as FileIOModel); _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo(LastSelectedItem.FileName_Full); }
             if (_mainWindowViewModel.SegmentationLabelViewModel.Visibility == Visibility.Visible)
             {
-                if(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0)
+                if(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0 || _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count>2)
                 {
                     if(preventRepeat)
                     {
                         preventRepeat = false;
                         return;
                     }
-                    var result = await _mainWindowViewModel.FooMessage("Label clear?", "If you click OK button, clear all label in previous image.", MahApps.Metro.Controls.Dialogs.MessageDialogStyle.AffirmativeAndNegative);
-                    if(result == MahApps.Metro.Controls.Dialogs.MessageDialogResult.Affirmative)
+                    if(_mainWindowViewModel.SegmentationLabelViewModel.IsAutoClearOn)
                     {
                         _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
                         LastSelectedItem = e.AddedItems[0] as FileIOModel;
+
+                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+
+                        //reset
+                        _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
+                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
+                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
+                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
+                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
+                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
                     }
                     else
                     {
-                        preventRepeat = true;
-                        (e.Source as ListBox).SelectedItem = LastSelectedItem;
-                        return;
+                        var result = await _mainWindowViewModel.FooMessage("Label clear?", "If you click OK button, clear all label in previous image.", MahApps.Metro.Controls.Dialogs.MessageDialogStyle.AffirmativeAndNegative);
+                        if (result == MahApps.Metro.Controls.Dialogs.MessageDialogResult.Affirmative)
+                        {
+                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
+                            LastSelectedItem = e.AddedItems[0] as FileIOModel;
+
+                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+
+                            //reset
+                            _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
+                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
+                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
+                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
+                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
+                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            preventRepeat = true;
+                            (e.Source as ListBox).SelectedItem = LastSelectedItem;
+                            return;
+                        }
                     }
+
+                    
                 }
                 _mainWindowViewModel.SegmentationLabelViewModel.UpdateImageInfo((e.AddedItems[0] as FileIOModel).FileName_Full);
                 LastSelectedItem = e.AddedItems[0] as FileIOModel;

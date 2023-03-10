@@ -33,7 +33,7 @@ namespace JHoney_ImageConverter.ViewModel
             get { return _selectedColor; }
             set { _selectedColor = value; SegmentationLabelViewModel.InkCanvasInfo.DefaultDrawingAttributes.Color = value; SegmentationLabelViewModel.UpdateColor(); OnPropertyChanged("SelectedColor"); }
         }
-        private Color _selectedColor = Color.FromArgb(255,0,0,0);
+        private Color _selectedColor = Color.FromArgb(100,255,0,0);
 
         private IDialogCoordinator _dialogCoordinator;
 
@@ -119,6 +119,9 @@ namespace JHoney_ImageConverter.ViewModel
         #region 커맨드
         public RelayCommand<object> CloseCommand { get; private set; }
         public RelayCommand<object> CommandSelectMenu { get; private set; }
+
+        
+
         #endregion
 
         #region 초기화
@@ -311,6 +314,7 @@ namespace JHoney_ImageConverter.ViewModel
             var result = this._dialogCoordinator.ShowMessageAsync(this, title,message,messageDialogStyle);
             return await result;
         }
+        
         #endregion
 
     }
