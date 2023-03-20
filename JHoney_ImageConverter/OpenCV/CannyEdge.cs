@@ -9,13 +9,13 @@ namespace JHoney_ImageConverter.OpenCV
 {
     class CannyEdge
     {
-        public Mat cannyToImage(Mat RawImage, int threshold1)
+        public Mat cannyToImage(Mat RawImage, int threshold1, int threshold2)
         {
             if(RawImage.Channels()!=1)
             {
                 RawImage = RawImage.CvtColor(ColorConversionCodes.BGR2GRAY);
             }
-            Cv2.Canny(RawImage, RawImage, threshold1, threshold1 * 3);
+            Cv2.Canny(RawImage, RawImage, threshold1, threshold2);
 
             return RawImage;
         }

@@ -48,7 +48,7 @@ namespace JHoney_ImageConverter.ViewModel
         public int PagingSize
         {
             get { return _pagingSize; }
-            set { _pagingSize = value; PageListExtract(""); OnPropertyChanged("PagingSize");  }
+            set { _pagingSize = value; PageListExtract(""); OnPropertyChanged("PagingSize"); }
         }
         private int _pagingSize = 10;
 
@@ -159,10 +159,12 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<object> CommandOpenClose { get; private set; }
         public RelayCommand<object> CommandSelectMode { get; private set; }
         public RelayCommand<object> CommandOpenMenu { get; private set; }
+
+        public RelayCommand<object> CommandDelMenu { get; private set; }
         public RelayCommand<object> CommandSetPage { get; private set; }
         public RelayCommand<SelectionChangedEventArgs> CommandSelectImage { get; private set; }
         public RelayCommand<MouseEventArgs> ListBoxPreviewMouseDown { get; private set; }
-        
+
         #endregion
 
         #region 초기화
@@ -190,11 +192,14 @@ namespace JHoney_ImageConverter.ViewModel
             CommandOpenClose = new RelayCommand<object>((param) => OnCommandOpenClose(param));
             CommandSelectMode = new RelayCommand<object>((param) => OnCommandSelectMode(param));
             CommandOpenMenu = new RelayCommand<object>((param) => OnCommandOpenMenu(param));
+            CommandDelMenu = new RelayCommand<object>((param) => OnCommandDelMenu(param));
             CommandSetPage = new RelayCommand<object>((param) => OnCommandSetPage(param));
             CommandSelectImage = new RelayCommand<SelectionChangedEventArgs>((e) => OnCommandSelectImage(e));
 
-            ListBoxPreviewMouseDown= new RelayCommand<MouseEventArgs>((e) => OnListBoxPreviewMouseDown(e));
+            ListBoxPreviewMouseDown = new RelayCommand<MouseEventArgs>((e) => OnListBoxPreviewMouseDown(e));
         }
+
+
 
         void InitEvent()
         {
@@ -256,7 +261,36 @@ namespace JHoney_ImageConverter.ViewModel
 
             }
         }
-
+        private void OnCommandDelMenu(object param)
+        {
+            if(LoadImageListAll.Count == 0)
+            { return; }
+            switch (FileDelSelectedIndex)
+            {
+                case 0:
+                    LoadImageListCurrent.Clear();
+                    SelectNumPageList.Clear();
+                    if (LastSelectedItem != null) { LoadImageListAll.Remove(LastSelectedItem); }
+                    else { LoadImageListAll.RemoveAt(0); }
+                    LastSelectedItem= null;
+                    PageListExtract("");
+                    if (BoolSelectImageView)
+                    {
+                        _mainWindowViewModel.IsEnabled = false;
+                        _mainWindowViewModel.ProgressLoadingViewModel.Visibility = Visibility.Visible;
+                        AddFileThread = new Thread(() => MakeThumbnailandList(LoadImageListCurrent));
+                        AddFileThread.Start();
+                    }
+                    break;
+                case 1:
+                    LoadImageListCurrent.Clear();
+                    LoadImageListAll.Clear();
+                    SelectNumPageList.Clear();
+                    LastSelectedItem = null;
+                    PageListExtract("");
+                    break;
+            }
+        }
         private void OnCommandOpenMenu(object param)
         {
             DirectoryInfo di;
@@ -496,9 +530,9 @@ namespace JHoney_ImageConverter.ViewModel
             }
             if (LoadImageListCurrent.Count > 0)
             {
-                
-                    LoadImageListCurrent.Clear();
-                
+
+                LoadImageListCurrent.Clear();
+
             }
 
             LoadImageListCurrent = new ObservableCollection<FileIOModel>(LoadImageListAll.Skip((CurrentPage - 1) * PagingSize).Take(PagingSize));
@@ -517,10 +551,10 @@ namespace JHoney_ImageConverter.ViewModel
         }
         void ListNumRefresh()
         {
-            
-                SelectNumPageList.Clear();
 
-            MaxPage =(int)Math.Ceiling(((double)LoadImageListAll.Count / (double)PagingSize));
+            SelectNumPageList.Clear();
+
+            MaxPage = (int)Math.Ceiling(((double)LoadImageListAll.Count / (double)PagingSize));
             int TempPage = (((CurrentPage - 1) / 5) * 5) + 1;
             for (int iLoofCount = 0; iLoofCount < 5; iLoofCount++)
             {
@@ -648,34 +682,22 @@ namespace JHoney_ImageConverter.ViewModel
         {
             if (e.AddedItems.Count < 1) { return; }
 
-            if(_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible) { LastSelectedItem = (e.AddedItems[0] as FileIOModel); _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo(LastSelectedItem.FileName_Full); }
+            if (_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible) { LastSelectedItem = (e.AddedItems[0] as FileIOModel); _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo(LastSelectedItem.FileName_Full); }
             if (_mainWindowViewModel.SegmentationLabelViewModel.Visibility == Visibility.Visible)
             {
-                if(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0 || _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count>2)
+                if (_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0 || _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count > 2)
                 {
-                    if(preventRepeat)
+                    if (preventRepeat)
                     {
                         preventRepeat = false;
                         return;
                     }
-                    if(_mainWindowViewModel.SegmentationLabelViewModel.IsAutoClearOn)
+                    if (_mainWindowViewModel.SegmentationLabelViewModel.IsAutoClearOn)
                     {
                         _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
                         LastSelectedItem = e.AddedItems[0] as FileIOModel;
 
-                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
-
-                        //reset
-                        _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
-                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
-                        _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
-                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
-                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-                        _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
-                        _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
+                        segCanvasReset();
                     }
                     else
                     {
@@ -685,19 +707,8 @@ namespace JHoney_ImageConverter.ViewModel
                             _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
                             LastSelectedItem = e.AddedItems[0] as FileIOModel;
 
-                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+                            segCanvasReset();
 
-                            //reset
-                            _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
-                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
-                            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
-                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
-                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-                            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
-                            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
                         }
                         else
                         {
@@ -707,16 +718,34 @@ namespace JHoney_ImageConverter.ViewModel
                         }
                     }
 
-                    
+
                 }
                 _mainWindowViewModel.SegmentationLabelViewModel.UpdateImageInfo((e.AddedItems[0] as FileIOModel).FileName_Full);
                 LastSelectedItem = e.AddedItems[0] as FileIOModel;
             }
 
         }
+
+        void segCanvasReset()
+        {
+            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+
+            //reset
+            _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
+            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+            _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
+            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
+            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
+            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
+            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
+        }
+
         private void OnListBoxPreviewMouseDown(MouseEventArgs e)
         {
-            if(LastSelectedItem==null)
+            if (LastSelectedItem == null)
             { return; }
             if (_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible)
             {

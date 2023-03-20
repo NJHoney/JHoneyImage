@@ -1265,9 +1265,10 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 copyObject.Add(XamlWriter.Save(InkCanvasInfo.GetSelectedElements()[i]));
             }
+            if (copyObject.Count > 0) { Clipboard.SetDataObject(copyObject); }
             if (InkCanvasInfo.GetSelectedStrokes().Count > 0) { InkCanvasInfo.CopySelection(); }//_copystrokeCollection = InkCanvasInfo.GetSelectedStrokes().Clone(); }
             else { if (_copystrokeCollection != null) { _copystrokeCollection.Clear(); } }
-            if (copyObject.Count > 0) { Clipboard.SetDataObject(copyObject); }
+            
 
 
 
@@ -1290,13 +1291,13 @@ namespace JHoney_ImageConverter.ViewModel
 
                 for (int j = 0; j < data.Count; j++)
                 {
-                    if (data[j].StartsWith("<Polygon"))
+                    if (data[j].StartsWith("<Polygon") || data[j].StartsWith("<Rectangle")||data[j].StartsWith("<Ellipse"))
                     {
                         using (MemoryStream stream = new MemoryStream())
                         {
                             using (StreamWriter sw = new StreamWriter(stream))
                             {
-                                sw.Write(data[0]);
+                                sw.Write(data[j]);
                                 sw.Flush();
                                 stream.Seek(0, SeekOrigin.Begin);
                                 Shape shape = XamlReader.Load(stream) as Shape;

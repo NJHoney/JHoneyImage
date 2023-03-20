@@ -192,7 +192,12 @@ namespace JHoney_ImageConverter.ViewModel
             set { _optionParamText_01 = value; OnPropertyChanged("OptionParamText_01"); }
         }
         private string _optionParamText_01 = "Threshold";
-
+        public int OptionParamSlider_01_Value
+        {
+            get { return _optionParamSlider_01_Value; }
+            set { _optionParamSlider_01_Value = value; OnPropertyChanged("OptionParamSlider_01_Value"); }
+        }
+        private int _optionParamSlider_01_Value = 0;
         public int OptionParamSlider_01_Min
         {
             get { return _optionParamSlider_01_Min; }
@@ -207,6 +212,27 @@ namespace JHoney_ImageConverter.ViewModel
         }
         private int _optionParamSlider_01_Max = 255;
 
+        public int OptionParamSlider_02_Max
+        {
+            get { return _optionParamSlider_02_Max; }
+            set { _optionParamSlider_02_Max = value; OnPropertyChanged("OptionParamSlider_02_Max"); }
+        }
+        private int _optionParamSlider_02_Max = 255;
+
+        public int OptionParamSlider_02_Value
+        {
+            get { return _optionParamSlider_02_Value; }
+            set { _optionParamSlider_02_Value = value; OnPropertyChanged("OptionParamSlider_02_Value"); }
+        }
+        private int _optionParamSlider_02_Value = 255;
+
+        public Visibility Param2Visibility
+        {
+            get { return _param2Visibility; }
+            set { _param2Visibility = value; OnPropertyChanged("Param2Visibility"); }
+        }
+        private Visibility _param2Visibility = Visibility.Collapsed;
+        
         #endregion ---------------------------------------------------------------------------------
 
         public DataGrid ImageInfoDataGrid
@@ -241,8 +267,9 @@ namespace JHoney_ImageConverter.ViewModel
         #endregion ---------------------------------------------------------------------------------
 
         public RelayCommand<object> CommandChangeSliderValue { get; private set; }
+        public RelayCommand<object> CommandChangeSliderValue2 { get; private set; }
         public RelayCommand<object> CommandConfirmChange { get; private set; }
-        public RelayCommand<object> CommandToggle { get; private set; }
+        public RelayCommand<object> CommandSelectOption { get; private set; }
 
         public RelayCommand<object> CommandCropResize { get; private set; }
         #endregion
@@ -275,9 +302,10 @@ namespace JHoney_ImageConverter.ViewModel
             CanvasEventMouseUp = new RelayCommand<MouseEventArgs>((e) => OnCanvasEventMouseUp(e));
             CommandDropFile = new RelayCommand<DragEventArgs>((e) => OnCommandDropFile(e));
 
-            CommandChangeSliderValue = new RelayCommand<object>((param) => OnCommandChangeSliderValue(param));
+            CommandChangeSliderValue = new RelayCommand<object>((e) => OnCommandChangeSliderValue(e));
+            CommandChangeSliderValue2 = new RelayCommand<object>((e) => OnCommandChangeSliderValue2(e));
             CommandConfirmChange = new RelayCommand<object>((param) => OnCommandConfirmChange(param));
-            CommandToggle = new RelayCommand<object>((param) => OnCommandToggle(param));
+            CommandSelectOption = new RelayCommand<object>((param) => OnCommandSelectOption(param));
             CommandCropResize = new RelayCommand<object>((param) => OnCommandCropResize(param));
         }
 
@@ -659,37 +687,53 @@ namespace JHoney_ImageConverter.ViewModel
             UpdateImageInfo(TempMat);
         }
 
-        private void OnCommandChangeSliderValue(object param)
+        private void OnCommandChangeSliderValue(object e)
         {
             if (TempMat == null) { return; }
             TempConvertedMat = TempMat.Clone();
-
-            switch(OptionMode)
+            int newValue = (int)(e as RoutedPropertyChangedEventArgs<double>).NewValue;
+            switch (OptionMode)
             {
-                case "ToggleBinary":
-                    _binary.imgTobinary(TempConvertedMat, System.Convert.ToInt32(param), 255).SaveImage(tempImgPath + "TempConverted.png");
+                case "Threshold":
+                    TempConvertedMat = _binary.imgTobinary(TempConvertedMat, System.Convert.ToInt32(newValue),OptionParamSlider_01_Max);
                     break;
 
-                case "ToggleGaussian":
-                    _gaussianBlur.gaussianToImg(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
+                case "Gaussian":
+                    TempConvertedMat = _gaussianBlur.gaussianToImg(TempConvertedMat, Convert.ToInt32(newValue));
                     break;
 
-                case "ToggleCanny":
-                    _cannyEdge.cannyToImage(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
+                case "Canny":
+                    TempConvertedMat = _cannyEdge.cannyToImage(TempConvertedMat, Convert.ToInt32(newValue), OptionParamSlider_02_Value);
                     break;
 
-                case "ToggleMedian":
-                    _medianBlur.imgToMedian(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png"); 
+                case "Median":
+                    TempConvertedMat = _medianBlur.imgToMedian(TempConvertedMat, Convert.ToInt32(newValue));
                     break;
 
-                case "ToggleRotate":
-                    _rotate.RotateFromMat(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
+                case "Rotation":
+                    TempConvertedMat = _rotate.RotateFromMat(TempConvertedMat, Convert.ToInt32(newValue));
                     break;
                 case "ToggleEdge":
                     //_edgePair.imgTobinary(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
                     break;
             }
-            ImageShow.ImageSourceUpdate(tempImgPath + "TempConverted.png", "ImageBrush");
+            ImageShow.ImageSourceUpdate(TempConvertedMat, "ImageBrush");
+
+        }
+
+        private void OnCommandChangeSliderValue2(object e)
+        {
+            if (TempMat == null) { return; }
+            TempConvertedMat = TempMat.Clone();
+            int newValue = (int)(e as RoutedPropertyChangedEventArgs<double>).NewValue;
+            switch (OptionMode)
+            {
+                case "Canny":
+                    TempConvertedMat = _cannyEdge.cannyToImage(TempConvertedMat, OptionParamSlider_01_Value, newValue);
+                    ImageShow.ImageSourceUpdate(TempConvertedMat, "ImageBrush");
+                    break;
+            }
+            
 
         }
 
@@ -782,71 +826,53 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 return;
             }
-            TempMat = new Mat(tempImgPath + "TempConverted.png", ImreadModes.Unchanged);
-            TempMat.SaveImage(tempImg);
-            //UpdateImageInfo();
+            TempMat = TempConvertedMat;
+            
+            UpdateImageInfo(TempMat);
 
         }
 
-        private void OnCommandToggle(object param)
+        private void OnCommandSelectOption(object param)
         {
-            ToggleButton TempToggleButton = param as ToggleButton;
-            if(TempToggleButton.IsChecked==false)
-            {
-                IsToggled = false;
-
-                for (int iLoofCount = 0; iLoofCount < TogleButtonEnabled.Count; iLoofCount++)
-                {
-                    TogleButtonEnabled[iLoofCount] = true;
-                }
-
-                return;
-            }
-            IsToggled = true;
-            OptionMode = TempToggleButton.Name;
+            OptionMode = param.ToString();
 
             for (int iLoofCount = 0; iLoofCount < TogleButtonEnabled.Count; iLoofCount++)
             {
                 TogleButtonEnabled[iLoofCount] = false;
             }
-
-            switch (TempToggleButton.Name)
+            Param2Visibility = Visibility.Collapsed;
+            switch (OptionMode)
             {
-                case "ToggleBinary":
+                case "Threshold":
                     OptionParamText_01 = "Threshold";
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 255;
-                    TogleButtonEnabled[0] = true;
                     break;
-                case "ToggleGaussian":
-                    OptionParamText_01 = "Threshold";
+                case "Gaussian":
+                    OptionParamText_01 = "Gaussian";
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 100;
-                    TogleButtonEnabled[1] = true;
                     break;
-                case "ToggleCanny":
-                    OptionParamText_01 = "Threshold";
+                case "Canny":
+                    OptionParamText_01 = "Canny";
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 255;
-                    TogleButtonEnabled[2] = true;
+                    Param2Visibility = Visibility.Visible;
                     break;
-                case "ToggleMedian":
-                    OptionParamText_01 = "Threshold";
+                case "Median":
+                    OptionParamText_01 = "Median";
                     OptionParamSlider_01_Min = 0;
-                    OptionParamSlider_01_Max = 255;
-                    TogleButtonEnabled[3] = true;
+                    OptionParamSlider_01_Max = 50;
                     break;
-                case "ToggleRotate":
-                    OptionParamText_01 = "Angle";
+                case "Rotation":
+                    OptionParamText_01 = "Rotation";
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 360;
-                    TogleButtonEnabled[4] = true;
                     break;
                 case "ToggleEdge":
                     OptionParamText_01 = "Edge";
                     OptionParamSlider_01_Min = 0;
                     OptionParamSlider_01_Max = 255;
-                    TogleButtonEnabled[5] = true;
                     break;
             }
         }
