@@ -335,3 +335,5 @@ D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\View\SegmentationLabe
 D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\View\SegmentationLabelView.baml
 D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\Util\CustomColorButton.g.cs
 D:\Project\JHoneyImage\JHoney_ImageConverter\obj\x64\Debug\Util\CustomColorButton.baml
+D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\Newtonsoft.Json.dll
+D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Debug\Newtonsoft.Json.xml

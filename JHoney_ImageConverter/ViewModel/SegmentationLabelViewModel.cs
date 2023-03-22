@@ -26,6 +26,8 @@ using System.Windows.Threading;
 using System.Windows.Markup;
 using System.Web.Hosting;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace JHoney_ImageConverter.ViewModel
 {
@@ -123,6 +125,13 @@ namespace JHoney_ImageConverter.ViewModel
         }
         private ImageInfoModel _imageInfoDataGridModel = new ImageInfoModel();
         #endregion ---------------------------------------------------------------------------------
+
+        public ListBox LabelsListBox
+        {
+            get { return _labelsListBox; }
+            set { _labelsListBox = value; OnPropertyChanged("LabelsListBox"); }
+        }
+        private ListBox _labelsListBox = new ListBox();
 
         #region ---［ ROI ］---------------------------------------------------------------------
 
@@ -328,6 +337,8 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<MouseButtonEventArgs> CanvasEventPreviewMouseDown { get; private set; }
         public RelayCommand<MouseButtonEventArgs> CanvasEventPreviewMouseUp { get; private set; }
         public RelayCommand<object> CanvasEventSelectionResizing { get; private set; }
+        public RelayCommand<object> CanvasEventSelectionChanged { get; private set; }
+        
 
         public RelayCommand CopyCommand { get; private set; }
         public RelayCommand PasteCommand { get; private set; }
@@ -343,9 +354,11 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<object> CommandSelectEditingMode { get; private set; }
 
         public RelayCommand<object> CommandSaveLabelImage { get; private set; }
-
+        public RelayCommand<object> CommandSaveRectToJson { get; private set; }
+        public RelayCommand<object> CommandLoadRectToJson { get; private set; }
+        
         public RelayCommand<object> CommandSetSavePath { get; private set; }
-
+        public RelayCommand<object> ListBoxSelectionChanged { get; private set; }
         #endregion
 
         #region 초기화
@@ -381,6 +394,7 @@ namespace JHoney_ImageConverter.ViewModel
             PasteCommand = new RelayCommand(() => ExecutePaste());
 
             CanvasEventSelectionResizing = new RelayCommand<object>((e) => OnCanvasEventSelectionResizing(e));
+            CanvasEventSelectionChanged = new RelayCommand<object>((e) => OnCanvasEventSelectionChanged(e));
 
             CommandDropFile = new RelayCommand<DragEventArgs>((e) => OnCommandDropFile(e));
 
@@ -388,10 +402,14 @@ namespace JHoney_ImageConverter.ViewModel
             CommandSetColor = new RelayCommand<object>((param) => OnCommandSetColor(param));
             CommandSelectEditingMode = new RelayCommand<object>((param) => OnCommandSelectEditingMode(param));
             CommandSaveLabelImage = new RelayCommand<object>((param) => OnCommandSaveLabelImage(param));
+            CommandSaveRectToJson = new RelayCommand<object>((param) => OnCommandSaveRectToJson(param));
+            CommandLoadRectToJson = new RelayCommand<object>((param) => OnCommandLoadRectToJson(param));
             CommandSetSavePath = new RelayCommand<object>((param) => OnCommandSetSavePath(param));
+
+            ListBoxSelectionChanged = new RelayCommand<object>((e) => OnListBoxSelectionChanged(e));
         }
 
-
+        
 
         void InitEvent()
         {
@@ -431,6 +449,11 @@ namespace JHoney_ImageConverter.ViewModel
                 ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString());
                 InkCanvasInfo.Children.Add(ellipseline);
                 ellipseline.Visibility = Visibility.Collapsed;
+
+            }
+            if (param.GetType().Name == "ListBox")
+            {
+                LabelsListBox = param as ListBox;
             }
 
 
@@ -888,8 +911,6 @@ namespace JHoney_ImageConverter.ViewModel
             }
         }
 
-
-
         void UpdateRectPosition(MouseEventArgs e, Shape shape)
         {
             if (CurrentMousePoint.X >= StartMousePoint.X)
@@ -1225,9 +1246,110 @@ namespace JHoney_ImageConverter.ViewModel
 
             InkCanvasInfo.EditingMode = preMode;
         }
+        private void OnCommandSaveRectToJson(object param)
+        {
+            if (TxtSaveFilePath == "")
+            {
+                Microsoft.Win32.SaveFileDialog Dialog = new Microsoft.Win32.SaveFileDialog();
+                Dialog.DefaultExt = ".txt";
+                Dialog.Filter = "JSon File (*.json)|*.json|All Files (*.*)|*.*";
+                bool? result = Dialog.ShowDialog();
+
+                var json = new JObject();
+                if (result == true)
+                {
+                    if (Dialog.FileName != "")
+                    {
+                        for (int childIndex = 2; childIndex < InkCanvasInfo.Children.Count; childIndex++)
+                        {
+                            if(InkCanvasInfo.Children[childIndex].GetType()!=typeof(Rectangle)) { continue; }
+                            var transform = InkCanvasInfo.Children[childIndex].TransformToAncestor(InkCanvasInfo);
+                            System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
+                            var rectinfo = new[] { position.X.ToString() ,position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
+                            json.Add("Rect" + (childIndex-2), JArray.FromObject(rectinfo));
+                            File.WriteAllText(Dialog.FileName, json.ToString() );
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var json = new JObject();
+                for (int childIndex = 2; childIndex < InkCanvasInfo.Children.Count; childIndex++)
+                {
+                    if (InkCanvasInfo.Children[childIndex].GetType() != typeof(Rectangle)) { continue; }
+                    var transform = InkCanvasInfo.Children[childIndex].TransformToAncestor(InkCanvasInfo);
+                    System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
+                    var rectinfo = new[] { position.X.ToString(), position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
+                    json.Add("Rect" + (childIndex - 2), JArray.FromObject(rectinfo));
+                    File.WriteAllText(TxtSaveFilePath+"\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName+".json", json.ToString());
+                }
+                
+            }
+
+        }
+        private void OnCommandLoadRectToJson(object param)
+        {
+            JObject json = new JObject();
+            if (TxtSaveFilePath != "")
+            {
+                if (File.Exists(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
+                {
+                    using (StreamReader file = File.OpenText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
+                    using (JsonTextReader reader = new JsonTextReader(file))
+                    {
+                        json = (JObject)JToken.ReadFrom(reader);
+                        var rectList = json.Children().ToList();
+                        for (int i = 0; i < rectList.Count; i++)
+                        {
+                            Rectangle tempRect = new Rectangle() { Width = (double)rectList[i].ElementAt(0).ElementAt(2), Height = (double)rectList[i].ElementAt(0).ElementAt(3), StrokeThickness = PenThickness };
+                            InkCanvas.SetLeft(tempRect, (double)rectList[i].ElementAt(0).ElementAt(0));
+                            InkCanvas.SetTop(tempRect, (double)rectList[i].ElementAt(0).ElementAt(1));
+
+                            InkCanvasInfo.Children.Add(tempRect);
+                            UpdateColor();
+                        }
+                    }
+                    return;
+                }
+            }
+
+            Microsoft.Win32.OpenFileDialog Dialog = new Microsoft.Win32.OpenFileDialog();
+            Dialog.DefaultExt = ".txt";
+            Dialog.Filter = "JSon File (*.json)|*.json|All Files (*.*)|*.*";
+            bool? result = Dialog.ShowDialog();
+
+            
+            if (result == true)
+            {
+                if (Dialog.FileName != "")
+                {
+                    using (StreamReader file = File.OpenText(Dialog.FileName))
+                    using (JsonTextReader reader = new JsonTextReader(file))
+                    {
+                        json = (JObject)JToken.ReadFrom(reader);
+                        var rectList = json.Children().ToList();
+                        for (int i = 0; i < rectList.Count; i++)
+                        {
+                            Rectangle tempRect = new Rectangle() { Width = (double)rectList[i].ElementAt(0).ElementAt(2), Height = (double)rectList[i].ElementAt(0).ElementAt(3), StrokeThickness = PenThickness };
+                            InkCanvas.SetLeft(tempRect, (double)rectList[i].ElementAt(0).ElementAt(0));
+                            InkCanvas.SetTop(tempRect, (double)rectList[i].ElementAt(0).ElementAt(1));
+
+                            InkCanvasInfo.Children.Add(tempRect);
+                            UpdateColor();
+                        }
+                    }
+                }
+            }
+
+        }
 
         private void OnCanvasEventSelectionResizing(object e)
         {
+            if(InkCanvasInfo.GetSelectedElements().Count == 0)
+            {
+                return;
+            }
             var selectedItem = InkCanvasInfo.GetSelectedElements()[0];
             if (selectedItem.GetType() == typeof(Polygon))
             {
@@ -1255,6 +1377,25 @@ namespace JHoney_ImageConverter.ViewModel
                 //(selectedItem as Polygon).Points
                 //selectedItem.RenderSize = new System.Windows.Size((e as InkCanvasSelectionEditingEventArgs).NewRectangle.Width, (e as InkCanvasSelectionEditingEventArgs).NewRectangle.Height);
             }
+        }
+        private void OnCanvasEventSelectionChanged(object e)
+        {
+            if(InkCanvasInfo.GetSelectedStrokes().Count<1)
+            { return; }
+            LabelsListBox.SelectedItems.Clear();
+            foreach(Stroke stroke in InkCanvasInfo.GetSelectedStrokes())
+            {
+                LabelsListBox.SelectedItems.Add(stroke);
+            }
+        }
+
+        private void OnListBoxSelectionChanged(object e)
+        {
+            foreach (var item in (e as SelectionChangedEventArgs).AddedItems)
+            {
+                InkCanvasInfo.Select(new StrokeCollection() { (item as Stroke) });
+            } 
+            //InkCanvasInfo.Select()
         }
 
         private void ExecuteCopy()

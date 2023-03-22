@@ -1,6 +1,7 @@
 ﻿
 FD:\Project\JHoneyImage\JHoney_ImageConverter\App.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\MainWindow.xaml;;
+FD:\Project\JHoneyImage\JHoney_ImageConverter\Util\CustomColorButton.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\Util\Loading\View\LoadingView.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\Util\Loading\View\ProgressLoadingView.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\View\ImageConverterView.xaml;;
@@ -10,5 +11,4 @@ FD:\Project\JHoneyImage\JHoney_ImageConverter\View\ImageListView.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\View\ImageMuiltConvertView.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\View\ImagePatternMatchView.xaml;;
 FD:\Project\JHoneyImage\JHoney_ImageConverter\View\SegmentationLabelView.xaml;;
-FD:\Project\JHoneyImage\JHoney_ImageConverter\Util\CustomColorButton.xaml;;
 
