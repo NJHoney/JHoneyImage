@@ -185,6 +185,12 @@
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding Path=CanvasEventSelectionChanged}" PassEventArgsToCommand="True"/>
                                 </i:EventTrigger>
+                                <i:EventTrigger EventName="StrokeCollected">
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasStrokeCollected}" PassEventArgsToCommand="True"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewKeyDown">
+                                    <i:InvokeCommandAction Command="{Binding Path=CanvasKeyDown}" PassEventArgsToCommand="True"/>
+                                </i:EventTrigger>
                                 
                             </i:Interaction.Triggers>
                         </InkCanvas>
@@ -195,17 +201,22 @@
 
         <!--LabelList-->
         <GroupBox Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Width="200" Header="LabelList" Margin="5">
-            <ListBox x:Name="LabelsListBox" ItemsSource="{Binding Strokes, ElementName=InkCanvas}" SelectionMode="Multiple"  >
+            <DataGrid x:Name="datagrid_Shape" ItemsSource="{Binding ShapeList}"  >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="X" Binding="{Binding Point.X, StringFormat={}{0:0}}" />
+                    <DataGridTextColumn Header="Y" Binding="{Binding Point.Y, StringFormat={}{0:0}}" />
+                    <DataGridTextColumn Header="Width" Binding="{Binding Width, StringFormat={}{0:0}}" />
+                    <DataGridTextColumn Header="Height" Binding="{Binding Height, StringFormat={}{0:0}}" />
+                </DataGrid.Columns>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Loaded">
-                        <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=LabelsListBox, Mode=OneWay}" />
+                        <i:InvokeCommandAction Command="{Binding Path=CommandLoaded}" CommandParameter="{Binding ElementName=datagrid_Shape, Mode=OneWay}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding Path=ListBoxSelectionChanged}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </ListBox>
-
+            </DataGrid>
         </GroupBox>
 
     </Grid>

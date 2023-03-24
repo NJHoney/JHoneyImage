@@ -66,14 +66,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JHoney_ImageConverter.exe" size="237568">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="JHoney_ImageConverter.exe" size="242688">
       <assemblyIdentity name="JHoney_ImageConverter" version="1.0.0.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>UAlnW2AnzABobCOac5WTcl9abonnjqqGPzzn6rUG7kc=</dsig:DigestValue>
+        <dsig:DigestValue>UoAd2Hnc+4J0bP7n6PPAAaVTHqsNh2ttGrLK+1SkzPk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

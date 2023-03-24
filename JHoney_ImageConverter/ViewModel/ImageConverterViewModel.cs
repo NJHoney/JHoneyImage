@@ -288,7 +288,7 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 TogleButtonEnabled.Add(true);
             }
-
+            OptionMode = "Threshold";
         }
 
         void InitCommand()
