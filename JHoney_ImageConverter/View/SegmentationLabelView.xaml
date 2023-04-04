@@ -215,6 +215,9 @@
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding Path=ListBoxSelectionChanged}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewKeyDown">
+                        <i:InvokeCommandAction Command="{Binding Path=CanvasKeyDown}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
                 </i:Interaction.Triggers>
             </DataGrid>
         </GroupBox>

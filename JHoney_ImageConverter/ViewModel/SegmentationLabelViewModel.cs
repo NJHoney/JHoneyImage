@@ -390,7 +390,8 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 TogleButtonEnabled.Add(true);
             }
-
+            rectline.Tag = "UI";
+            ellipseline.Tag = "UI";
         }
 
         void InitCommand()
@@ -670,7 +671,7 @@ namespace JHoney_ImageConverter.ViewModel
                         tmpRect.Arrange(new System.Windows.Rect(tmpRect.DesiredSize));
 
                         InkCanvasInfo.Children.Add(tmpRect);
-                        ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpRect as Rectangle), Point = new System.Windows.Point(), uuid = tmpRect.Tag.ToString(), Width = tmpRect.ActualWidth, Height = tmpRect.ActualHeight });
+                        ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpRect as Rectangle), Point = new System.Windows.Point(InkCanvas.GetLeft(tmpRect),InkCanvas.GetTop(tmpRect)), uuid = tmpRect.Tag.ToString(), Width = tmpRect.ActualWidth, Height = tmpRect.ActualHeight });
 
                         
                         rectline.Visibility = Visibility.Collapsed;
@@ -733,7 +734,7 @@ namespace JHoney_ImageConverter.ViewModel
                         tmpellipse.Arrange(new System.Windows.Rect(tmpellipse.DesiredSize));
 
                         InkCanvasInfo.Children.Add(tmpellipse);
-                        ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpellipse as Ellipse), Point = new System.Windows.Point(), uuid = tmpellipse.Tag.ToString(), Width = tmpellipse.ActualWidth, Height = tmpellipse.ActualHeight });
+                        ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpellipse as Ellipse), Point = new System.Windows.Point(InkCanvas.GetLeft(tmpellipse),InkCanvas.GetTop(tmpellipse)), uuid = tmpellipse.Tag.ToString(), Width = tmpellipse.ActualWidth, Height = tmpellipse.ActualHeight });
 
 
                         ellipseline.Visibility = Visibility.Collapsed;
@@ -792,6 +793,11 @@ namespace JHoney_ImageConverter.ViewModel
                     {
                         return;
                     }
+                    if((e.OriginalSource as Ellipse).Tag!=null)
+                    {
+                        return;
+                    }
+
                     InkCanvasInfo.Children.Remove((Ellipse)e.OriginalSource);
                     InkCanvasInfo.Children.Remove(polyline);
                     Polygon tmpPolygon = new Polygon();
@@ -804,11 +810,11 @@ namespace JHoney_ImageConverter.ViewModel
                     drawOnMove = false;
                     //rbDraw.IsChecked = false;
                     InkCanvasInfo.EditingMode = InkCanvasEditingMode.None;
-                    polyline = new Polyline();
-                    polyline.Points = new PointCollection();
-                    polyline.StrokeThickness = PenThickness;
-                    polyline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString());
-                    InkCanvasInfo.Children.Add(polyline);
+                    //polyline = new Polyline();
+                    //polyline.Points = new PointCollection();
+                    //polyline.StrokeThickness = PenThickness;
+                    //polyline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString());
+                    //InkCanvasInfo.Children.Add(polyline);
 
                     if (IsFillOn) { tmpPolygon.Fill = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString()); }
                     adjustPolygonXY(tmpPolygon);
@@ -817,7 +823,8 @@ namespace JHoney_ImageConverter.ViewModel
                     tmpPolygon.Arrange(new System.Windows.Rect(tmpPolygon.DesiredSize));
 
                     InkCanvasInfo.Children.Add(tmpPolygon);
-                    ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpPolygon as Polygon), Point = new System.Windows.Point(), uuid=tmpPolygon.Tag.ToString(), Width=tmpPolygon.ActualWidth, Height=tmpPolygon.ActualHeight });
+                    ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpPolygon as Polygon), Point = new System.Windows.Point(InkCanvas.GetLeft(tmpPolygon),InkCanvas.GetTop(tmpPolygon)), uuid=tmpPolygon.Tag.ToString(), Width=tmpPolygon.ActualWidth, Height=tmpPolygon.ActualHeight });
+
                 }
                 if (drawOnMove)
                 {
@@ -1035,9 +1042,29 @@ namespace JHoney_ImageConverter.ViewModel
             return (int)Param;
         }
 
+        private void removeNullChild()
+        {
+            List<UIElement> tempList = new List<UIElement>();
+            for (int i = 0; i < InkCanvasInfo.Children.Count; i++)
+            {
+                if ((InkCanvasInfo.Children[i] as Shape).Tag == null)
+                {
+                    tempList.Add(InkCanvasInfo.Children[i]);
+                }
+            }
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                InkCanvasInfo.Children.Remove(tempList[i]);
+            }
+        }
+
         private void OnCommandSelectEditingMode(object param)
         {
             if (param == null) { return; }
+
+            removeNullChild();
+            IsPolygonMode = false;
+            drawOnMove = false;
 
             IsPolygonMode = IsRectangleMode = IsStartRect = IsEllipseMode = false;
             rectline.Visibility = Visibility.Collapsed;
@@ -1331,7 +1358,9 @@ namespace JHoney_ImageConverter.ViewModel
 
                     (selectedItem as Polygon).Points[i] = new System.Windows.Point(xPoint, yPoint);
                 }
-
+                ShapeList.Where(x => x.uuid == (selectedItem as Polygon).Tag.ToString()).First().Point = new System.Windows.Point(InkCanvas.GetLeft(selectedItem as Polygon), InkCanvas.GetTop(selectedItem as Polygon));
+                ShapeList.Where(x => x.uuid == (selectedItem as Polygon).Tag.ToString()).First().Width = (e as InkCanvasSelectionEditingEventArgs).NewRectangle.Width;
+                ShapeList.Where(x => x.uuid == (selectedItem as Polygon).Tag.ToString()).First().Height = (e as InkCanvasSelectionEditingEventArgs).NewRectangle.Height;
                 //(selectedItem as Polygon).Points
                 //selectedItem.RenderSize = new System.Windows.Size((e as InkCanvasSelectionEditingEventArgs).NewRectangle.Width, (e as InkCanvasSelectionEditingEventArgs).NewRectangle.Height);
             }
@@ -1345,10 +1374,19 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnListBoxSelectionChanged(object e)
         {
+            List<UIElement> tempList = new List<UIElement>();
             foreach (var item in (e as SelectionChangedEventArgs).AddedItems)
             {
-                InkCanvasInfo.Select(new StrokeCollection() { (item as Stroke) });
-            } 
+                for (int i = 0; i < InkCanvasInfo.Children.Count; i++)
+                {
+                    if((InkCanvasInfo.Children[i] as Shape).Tag.ToString() == (item as ShapeListModel).Shape.Tag.ToString())
+                    {
+                        tempList.Add(InkCanvasInfo.Children[i]);
+                    }
+                }
+
+            }
+            InkCanvasInfo.Select(tempList);
             //InkCanvasInfo.Select()
         }
 
@@ -1407,7 +1445,6 @@ namespace JHoney_ImageConverter.ViewModel
 
         }
 
-
         private void OnCanvasKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -1421,7 +1458,10 @@ namespace JHoney_ImageConverter.ViewModel
                 }
             }
         }
-
+        void calcLocation(UIElement uIElement)
+        {
+            ShapeList.Where(x=>x.uuid==(uIElement as Shape).Tag.ToString()).First().Point = new System.Windows.Point(InkCanvas.GetLeft(uIElement),InkCanvas.GetTop(uIElement));
+        }
         void adjustPolygonXY(Polygon tempPolygon)
         {
             double left = -1, top = -1, right = -1, bottom = -1;
@@ -1518,7 +1558,7 @@ namespace JHoney_ImageConverter.ViewModel
             Shape shape =null;
             copyObject = XamlWriter.Save(element);
 
-            if (copyObject.StartsWith("<Polygon") || copyObject.StartsWith("<Rectangle") || copyObject.StartsWith("<Ellipse"))
+            if (copyObject.StartsWith("<Polygon") || copyObject.StartsWith("<Rectangle") || copyObject.StartsWith("<Ellipse") || copyObject.StartsWith("<Path"))
 
                 using (MemoryStream stream = new MemoryStream())
             {

@@ -20,12 +20,21 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.TextFormatting;
+using System.Windows.Shapes;
 
 namespace JHoney_ImageConverter.ViewModel
 {
     class ImageListViewModel : CustomViewModelBase
     {
-        public MainWindowViewModel _mainWindowViewModel;
+        
+
+        public MainWindowViewModel MainWindowViewModel
+        {
+            get { return _mainWindowViewModel; }
+            set { _mainWindowViewModel = value; OnPropertyChanged("MainWindowViewModel"); }
+        }
+        private MainWindowViewModel _mainWindowViewModel;
+
         public Thread AddFileThread;
         bool preventRepeat = false;
         bool isRefresh = false;
@@ -726,22 +735,38 @@ namespace JHoney_ImageConverter.ViewModel
 
         }
 
-        void segCanvasReset()
+        public void segCanvasReset()
         {
-            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+            MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+            List<UIElement> tempList = new List<UIElement>();
+            for (int i = 0; i < MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count; i++)
+            {
+                if ((MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children[i] as Shape).Tag.ToString()=="UI")
+                {
+                    continue;
+                }
+                tempList.Add(MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children[i]);
+            }
+
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Remove(tempList[i]);
+            }
 
             //reset
-            _mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
-            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-            _mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
+            //_mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
+            //_mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+            //_mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+            //_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
             _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
-            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
-            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-            _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
+            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
+            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
+            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
+            //_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
             _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
         }
+
+
 
         private void OnListBoxPreviewMouseDown(MouseEventArgs e)
         {

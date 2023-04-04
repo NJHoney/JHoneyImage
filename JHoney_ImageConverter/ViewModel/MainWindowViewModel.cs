@@ -136,7 +136,7 @@ namespace JHoney_ImageConverter.ViewModel
         void InitData()
         {
             ImageConverterViewModel.Visibility = Visibility.Visible;
-            ImageListViewModel._mainWindowViewModel = this;
+            ImageListViewModel.MainWindowViewModel = this;
             ImageConverterViewModel._mainWindowViewModel = this;
             SegmentationLabelViewModel.MainWindowViewModel=this;
         }
