@@ -49,6 +49,9 @@
                     <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.ExpanderHeader}" Margin="5" IsChecked="{Binding BoolSelectImageView, Converter={cvt:BoolInvertConverter}}" Command="{Binding CommandSelectMode}" CommandParameter="Grid" Width="30" Height="30" >
                         <iconPacks:PackIconMaterial Kind="Table" />
                     </ToggleButton>
+                    <Button Command="{Binding CommandRefresh}" Style="{DynamicResource MahApps.Styles.Button}" Width="30" Height="30">
+                        <iconPacks:PackIconEvaIcons Kind="RefreshOutline" />
+                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

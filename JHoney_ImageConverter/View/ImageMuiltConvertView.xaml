@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JHoney_ImageConverter.View"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             
              xmlns:vc="clr-namespace:JHoney_ImageConverter.Converter"
              Visibility="{Binding Visibility}"
              mc:Ignorable="d" 
@@ -31,7 +30,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <RadioButton Content="{Binding Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" CommandParameter="{Binding Header}" >
+                            <RadioButton Content="{Binding Header}" GroupName="CommandSelect" Command="{Binding Command, ElementName=DummyBtn}" CommandParameter="{Binding Header}" IsChecked="{Binding IsSelected}" >
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
                                         <i:InvokeCommandAction Command="{Binding DataContext.CommandConvertSelect, ElementName=DummyBtn}" CommandParameter="{Binding Header}" />
@@ -68,13 +67,13 @@
                 </Grid.RowDefinitions>
 
                 <DataGrid x:Name="dataGrid" ItemsSource="{Binding ConvertCommandList}" AutoGenerateColumns="False" IsReadOnly="True" CanUserSortColumns="False">
-                    <!--<DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding .ConvertCommandName}" Header="Name" IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding .ParamList[0]}" Header="Param1" />
-                        <DataGridTextColumn Binding="{Binding .ParamList[1]}" Header="Param2" />
-                        <DataGridTextColumn Binding="{Binding .ParamList[2]}" Header="Param3" />
-                        <DataGridTextColumn Binding="{Binding .ParamList[3]}" Header="Param4" />
-                    </DataGrid.Columns>-->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding ConvertCommandName}" Header="Name" IsReadOnly="True" />
+                        <DataGridTextColumn Binding="{Binding ParamList[0]}" Header="Param1" />
+                        <DataGridTextColumn Binding="{Binding ParamList[1]}" Header="Param2" />
+                        <DataGridTextColumn Binding="{Binding ParamList[2]}" Header="Param3" />
+                        <DataGridTextColumn Binding="{Binding ParamList[3]}" Header="Param4" />
+                    </DataGrid.Columns>
                 </DataGrid>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >

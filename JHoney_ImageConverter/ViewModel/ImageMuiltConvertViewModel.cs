@@ -1,20 +1,29 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using JHoney_ImageConverter.Model;
+using JHoney_ImageConverter.OpenCV;
 using JHoney_ImageConverter.ViewModel.Base;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JHoney_ImageConverter.ViewModel
 {
-    class ImageMuiltConvertViewModel:CustomViewModelBase
+    class ImageMuiltConvertViewModel : CustomViewModelBase
     {
-
+        Thread thread;
         #region 프로퍼티
-
+        public MainWindowViewModel MainWindowViewModel
+        {
+            get { return _mainWindowViewModel; }
+            set { _mainWindowViewModel = value; OnPropertyChanged("MainWindowViewModel"); }
+        }
+        private MainWindowViewModel _mainWindowViewModel;
         public ObservableCollection<WorkListModel> WorkList
         {
             get { return _workList; }
@@ -123,7 +132,7 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<object> CommandConvertSelect { get; private set; }
         public RelayCommand<object> AddCommand { get; private set; }
         public RelayCommand<object> DelCommand { get; private set; }
-        
+
         #endregion
 
         #region 초기화
@@ -144,6 +153,7 @@ namespace JHoney_ImageConverter.ViewModel
             WorkList.Add(new WorkListModel() { Header = "EdgeCanny", IsSelected = false });
             WorkList.Add(new WorkListModel() { Header = "Crop", IsSelected = false });
             WorkList.Add(new WorkListModel() { Header = "Resize", IsSelected = false });
+            WorkList.Add(new WorkListModel() { Header = "Resize_Ratio", IsSelected = false });
             WorkList.Add(new WorkListModel() { Header = "ChangeChannel", IsSelected = false });
             WorkList.Add(new WorkListModel() { Header = "FindPattern", IsSelected = false });
             WorkList.Add(new WorkListModel() { Header = "MergeImage", IsSelected = false });
@@ -158,7 +168,7 @@ namespace JHoney_ImageConverter.ViewModel
             DelCommand = new RelayCommand<object>((param) => OnDelCommand(param));
         }
 
-        
+
         void InitEvent()
         {
 
@@ -169,8 +179,101 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnCommandRun(object param)
         {
-            
+            MainWindowViewModel.IsEnabled = false;
+            MainWindowViewModel.ProgressLoadingViewModel.Visibility = System.Windows.Visibility.Visible;
+
+            thread = new Thread(() => ThreadRun());
+            thread.Start();
+
         }
+        private void ThreadRun()
+        {
+            
+            for (int i = 0; i < MainWindowViewModel.ImageListViewModel.LoadImageListAll.Count; i++)
+            {
+                MainWindowViewModel.ProgressLoadingViewModel.SetProgress(i + 1, MainWindowViewModel.ImageListViewModel.LoadImageListAll.Count);
+                Mat temp = new Mat(MainWindowViewModel.ImageListViewModel.LoadImageListAll[i].FileName_Full);
+                for (int j = 0; j < ConvertCommandList.Count; j++)
+                {
+                    switch (ConvertCommandList[j].ConvertCommandName)
+                    {
+                        case "GrayScale":
+                            if (temp.Channels() == 1)
+                            {
+                                continue;
+                            }
+                            temp = MainWindowViewModel.ImageConverterViewModel._grayScale.imgToGrayscale(temp);
+                            break;
+                        case "Dilate":
+                            temp = MainWindowViewModel.ImageConverterViewModel._erodeDilate.Dilate(temp);
+                            break;
+                        case "Erode":
+                            temp = MainWindowViewModel.ImageConverterViewModel._erodeDilate.Erode(temp);
+                            break;
+                        case "Reverse":
+                            temp = MainWindowViewModel.ImageConverterViewModel._reverse.ImgReverse(temp);
+                            break;
+                        case "Blue":
+                            if (temp.Channels() < 3)
+                            {
+                                return;
+                            }
+                            temp = MainWindowViewModel.ImageConverterViewModel._colorExport.SingleChannelExport(temp, 0);
+                            break;
+                        case "Green":
+                            if (temp.Channels() < 3)
+                            {
+                                return;
+                            }
+                            temp = MainWindowViewModel.ImageConverterViewModel._colorExport.SingleChannelExport(temp, 1);
+                            break;
+                        case "Red":
+                            if (temp.Channels() < 3)
+                            {
+                                return;
+                            }
+                            temp = MainWindowViewModel.ImageConverterViewModel._colorExport.SingleChannelExport(temp, 2);
+                            break;
+                        case "Binary":
+                            temp = MainWindowViewModel.ImageConverterViewModel._binary.imgTobinary(temp, int.Parse(ConvertCommandList[j].ParamList[0]), 255);
+                            break;
+
+                        case "Gaussian":
+                            temp = MainWindowViewModel.ImageConverterViewModel._gaussianBlur.gaussianToImg(temp, int.Parse(ConvertCommandList[j].ParamList[0]));
+                            break;
+
+                        case "Canny":
+                            temp = MainWindowViewModel.ImageConverterViewModel._cannyEdge.cannyToImage(temp, int.Parse(ConvertCommandList[j].ParamList[0]), int.Parse(ConvertCommandList[j].ParamList[1]));
+                            break;
+
+                        case "Median":
+                            temp = MainWindowViewModel.ImageConverterViewModel._medianBlur.imgToMedian(temp, int.Parse(ConvertCommandList[j].ParamList[0]));
+                            break;
+
+                        case "Rotation":
+                            temp = MainWindowViewModel.ImageConverterViewModel._rotate.RotateFromMat(temp, int.Parse(ConvertCommandList[j].ParamList[0]));
+                            break;
+                        case "Crop":
+                            temp = temp.Clone(new OpenCvSharp.Rect(int.Parse(ConvertCommandList[j].ParamList[0]), int.Parse(ConvertCommandList[j].ParamList[1]), int.Parse(ConvertCommandList[j].ParamList[2]), int.Parse(ConvertCommandList[j].ParamList[3])));
+                            break;
+                        case "Resize":
+                            temp = MainWindowViewModel.ImageConverterViewModel._resize.ResizeFromMat(temp, int.Parse(ConvertCommandList[j].ParamList[0]), int.Parse(ConvertCommandList[j].ParamList[1]));
+                            break;
+                        case "Resize_Ratio":
+                            temp = MainWindowViewModel.ImageConverterViewModel._resize.Resize_RatioFromMat(temp, int.Parse(ConvertCommandList[j].ParamList[0]), int.Parse(ConvertCommandList[j].ParamList[1]), int.Parse(ConvertCommandList[j].ParamList[2]));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                temp.SaveImage(MainWindowViewModel.ImageListViewModel.LoadImageListAll[i].FileName_Full);
+                temp.Dispose();
+
+            }
+            MainWindowViewModel.IsEnabled = true;
+            MainWindowViewModel.ProgressLoadingViewModel.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
 
         private void OnAddCommand(object param)
         {
@@ -208,6 +311,9 @@ namespace JHoney_ImageConverter.ViewModel
                         case "Resize":
                             ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
                             break;
+                        case "Resize_Ratio":
+                            ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
+                            break;
                         case "ChangeChannel":
                             ConvertCommandList.Add(new ImageConvertInfoModel() { ConvertCommandName = ICM.Header, ParamList = tempList });
                             break;
@@ -227,7 +333,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnDelCommand(object param)
         {
-            if(param.ToString()=="-1")
+            if (param.ToString() == "-1")
             {
                 if (ConvertCommandList.Count > 0)
                     ConvertCommandList.RemoveAt(0);
@@ -242,40 +348,31 @@ namespace JHoney_ImageConverter.ViewModel
         private void OnCommandConvertSelect(object param)
         {
 
-            for (int iLoopCount = 0; iLoopCount < WorkList.Count; iLoopCount++)
-            {
-                WorkList[iLoopCount].IsSelected = false;
-            }
-
-            switch(param.ToString())
+            switch (param.ToString())
             {
                 case "GrayScale":
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[0].IsSelected = true;
                     break;
                 case "Dilate":
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[1].IsSelected = true;
                     break;
                 case "Erode":
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[2].IsSelected = true;
                     break;
                 case "Reverse":
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[3].IsSelected = true;
                     break;
                 case "Binary":
                     ParamText1 = "Threshold";
                     ParamVisibility1 = true;
                     ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[4].IsSelected = true;
                     break;
                 case "EdgeCanny":
                     ParamText1 = "Threshold";
+                    ParamText2 = "Threshold2";
                     ParamVisibility1 = true;
-                    ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[5].IsSelected = true;
+                    ParamVisibility2 = true;
+                    ParamVisibility3 = ParamVisibility4 = false;
                     break;
                 case "Crop":
                     ParamText1 = "Start-X";
@@ -283,26 +380,22 @@ namespace JHoney_ImageConverter.ViewModel
                     ParamText3 = "Width";
                     ParamText4 = "Height";
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = true;
-                    WorkList[6].IsSelected = true;
                     break;
                 case "Resize":
                     ParamText1 = "Width";
                     ParamText2 = "Height";
                     ParamVisibility1 = ParamVisibility2 = true;
                     ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[7].IsSelected = true;
                     break;
                 case "ChangeChannel":
                     ParamText1 = "Channel";
                     ParamVisibility1 = true;
                     ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[8].IsSelected = true;
                     break;
                 case "FindPattern":
                     ParamText1 = "PatternImage-Path";
                     ParamVisibility1 = true;
                     ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[9].IsSelected = true;
                     break;
                 case "MergeImage":
                     ParamText1 = "B Channel Path";
@@ -310,11 +403,17 @@ namespace JHoney_ImageConverter.ViewModel
                     ParamText3 = "R Channel Path";
                     ParamText4 = "A Channel Path(Empty is disable)";
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = true;
-                    WorkList[10].IsSelected = true;
                     break;
+                case "Resize_Ratio":
+                    ParamText1 = "Target Width";
+                    ParamText2 = "Target Height";
+                    ParamText3 = "Padding Value";
+                    ParamVisibility1 = ParamVisibility2 =ParamVisibility3 = true;
+                    ParamVisibility4 = false;
+                    break;
+
                 case "Test":
                     ParamVisibility1 = ParamVisibility2 = ParamVisibility3 = ParamVisibility4 = false;
-                    WorkList[11].IsSelected = true;
                     break;
 
             }

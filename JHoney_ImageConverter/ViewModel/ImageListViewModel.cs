@@ -173,7 +173,8 @@ namespace JHoney_ImageConverter.ViewModel
         public RelayCommand<object> CommandSetPage { get; private set; }
         public RelayCommand<SelectionChangedEventArgs> CommandSelectImage { get; private set; }
         public RelayCommand<MouseEventArgs> ListBoxPreviewMouseDown { get; private set; }
-
+        public RelayCommand<object> CommandRefresh { get; private set; }
+        
         #endregion
 
         #region 초기화
@@ -204,11 +205,9 @@ namespace JHoney_ImageConverter.ViewModel
             CommandDelMenu = new RelayCommand<object>((param) => OnCommandDelMenu(param));
             CommandSetPage = new RelayCommand<object>((param) => OnCommandSetPage(param));
             CommandSelectImage = new RelayCommand<SelectionChangedEventArgs>((e) => OnCommandSelectImage(e));
-
+            CommandRefresh = new RelayCommand<object>((param) => OnCommandRefresh(param));
             ListBoxPreviewMouseDown = new RelayCommand<MouseEventArgs>((e) => OnListBoxPreviewMouseDown(e));
         }
-
-
 
         void InitEvent()
         {
@@ -677,6 +676,7 @@ namespace JHoney_ImageConverter.ViewModel
                 ObservableCollection<FileIOModel> NoThumbTemp = new ObservableCollection<FileIOModel>();
                 for (int i = 0; i < LoadImageListCurrent.Count; i++)
                 {
+                    
                     if (LoadImageListCurrent[i].ThumbnailBitmapImage.StreamSource == null)
                     {
                         NoThumbTemp.Add(LoadImageListCurrent[i]);
@@ -694,7 +694,7 @@ namespace JHoney_ImageConverter.ViewModel
             if (_mainWindowViewModel.ImageConverterViewModel.Visibility == Visibility.Visible) { LastSelectedItem = (e.AddedItems[0] as FileIOModel); _mainWindowViewModel.ImageConverterViewModel.UpdateImageInfo(LastSelectedItem.FileName_Full); }
             if (_mainWindowViewModel.SegmentationLabelViewModel.Visibility == Visibility.Visible)
             {
-                if (_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0 || _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count > 2)
+                if (_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Count > 0 || _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count > 3)
                 {
                     if (preventRepeat)
                     {
@@ -705,7 +705,7 @@ namespace JHoney_ImageConverter.ViewModel
                     {
                         _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Strokes.Clear();
                         LastSelectedItem = e.AddedItems[0] as FileIOModel;
-
+                        
                         segCanvasReset();
                     }
                     else
@@ -737,7 +737,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         public void segCanvasReset()
         {
-            MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Clear();
+            MainWindowViewModel.SegmentationLabelViewModel.removeNullChild();
             List<UIElement> tempList = new List<UIElement>();
             for (int i = 0; i < MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Count; i++)
             {
@@ -752,21 +752,23 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 MainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Remove(tempList[i]);
             }
-
-            //reset
-            //_mainWindowViewModel.SegmentationLabelViewModel.rectline = new System.Windows.Shapes.Rectangle();
-            //_mainWindowViewModel.SegmentationLabelViewModel.rectline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-            //_mainWindowViewModel.SegmentationLabelViewModel.rectline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-            //_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.rectline);
-            _mainWindowViewModel.SegmentationLabelViewModel.rectline.Visibility = Visibility.Collapsed;
-            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline = new System.Windows.Shapes.Ellipse();
-            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(_mainWindowViewModel.SelectedColor.ToString());
-            //_mainWindowViewModel.SegmentationLabelViewModel.ellipseline.StrokeThickness = _mainWindowViewModel.SegmentationLabelViewModel.PenThickness;
-            //_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.Children.Add(_mainWindowViewModel.SegmentationLabelViewModel.ellipseline);
-            _mainWindowViewModel.SegmentationLabelViewModel.ellipseline.Visibility = Visibility.Collapsed;
+            MainWindowViewModel.SegmentationLabelViewModel.ShapeList.Clear();
         }
 
+        private void OnCommandRefresh(object param)
+        {
+            if (MainWindowViewModel.ImageListViewModel.BoolSelectImageView)
+            {
+                MainWindowViewModel.IsEnabled = false;
+                MainWindowViewModel.ProgressLoadingViewModel.Visibility = System.Windows.Visibility.Visible;
 
+                Application.Current.Dispatcher.BeginInvoke(new ThreadStart(() =>
+                {
+                    MainWindowViewModel.ImageListViewModel.MakeThumbnailandList(MainWindowViewModel.ImageListViewModel.LoadImageListCurrent);
+                }));                
+
+            }
+        }
 
         private void OnListBoxPreviewMouseDown(MouseEventArgs e)
         {

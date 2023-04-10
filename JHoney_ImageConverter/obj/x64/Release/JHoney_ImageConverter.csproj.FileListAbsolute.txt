@@ -199,6 +199,7 @@ D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\MahApps.Metro.IconP
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\MahApps.Metro.IconPacks.Zondicons.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Microsoft.Bcl.AsyncInterfaces.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Microsoft.Xaml.Behaviors.dll
+D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Newtonsoft.Json.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\OpenCvSharp.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\OpenCvSharp.Extensions.dll
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\OpenCvSharp.WpfExtensions.dll
@@ -286,6 +287,7 @@ D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\MahApps.Metro.IconP
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Microsoft.Bcl.AsyncInterfaces.xml
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Microsoft.Xaml.Behaviors.pdb
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Microsoft.Xaml.Behaviors.xml
+D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\Newtonsoft.Json.xml
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\OpenCvSharp.xml
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\OpenCvSharp.Extensions.xml
 D:\Project\JHoneyImage\JHoney_ImageConverter\bin\x64\Release\System.Buffers.xml

@@ -60,12 +60,12 @@
                 <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Segmentation">
                     <iconPacks:PackIconModern Kind="DrawBrush" />
                 </RadioButton>
-                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
+                <!--<RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Pattern">
                     <iconPacks:PackIconOcticons Width="20" Height="20" Kind="Search" />
-                </RadioButton>
-                <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Difference">
+                </RadioButton>-->
+                <!--<RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="Difference">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="ImageMultiple" />
-                </RadioButton>
+                </RadioButton>-->
                 <RadioButton Width="48" Height="48" Margin="4" Style="{StaticResource CustomRadioButton}" Command="{Binding CommandSelectMenu}" CommandParameter="MuiltConvert">
                     <iconPacks:PackIconModern Width="20" Height="20" Kind="SidebarLeftExpand" />
                 </RadioButton>

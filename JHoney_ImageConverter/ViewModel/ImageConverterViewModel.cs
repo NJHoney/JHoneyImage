@@ -21,7 +21,13 @@ namespace JHoney_ImageConverter.ViewModel
 {
     class ImageConverterViewModel : CustomViewModelBase
     {
-        public MainWindowViewModel _mainWindowViewModel;
+        
+        public MainWindowViewModel MainWindowViewModel
+        {
+            get { return _mainWindowViewModel; }
+            set { _mainWindowViewModel = value; OnPropertyChanged("MainWindowViewModel"); }
+        }
+        private MainWindowViewModel _mainWindowViewModel;
         #region 프로퍼티
 
         #region ---［ OpenCV ］---------------------------------------------------------------------
@@ -712,7 +718,6 @@ namespace JHoney_ImageConverter.ViewModel
 
                 case "Rotation":
                     TempConvertedMat = _rotate.RotateFromMat(TempConvertedMat, Convert.ToInt32(newValue));
-                    TempConvertedMat.SaveImage(@"D:\TestImage\rj45_355.png");
                     break;
                 case "ToggleEdge":
                     //_edgePair.imgTobinary(TempConvertedMat, Convert.ToInt32(param)).SaveImage(tempImgPath + "TempConverted.png");
