@@ -757,14 +757,31 @@ namespace JHoney_ImageConverter.ViewModel
 
         private void OnCommandRefresh(object param)
         {
+            LoadImageListCurrent.Clear();
+            ObservableCollection<FileIOModel> tempList = new ObservableCollection<FileIOModel>();
+            for (int i = 0; i < LoadImageListAll.Count; i++)
+            {
+                if (!File.Exists(LoadImageListAll[i].FileName_Full))
+                {
+                    tempList.Add(LoadImageListAll[i]);
+                }
+            }
+            for (int i = 0; i < tempList.Count; i++)
+            {
+                LoadImageListAll.Remove(tempList[i]);
+            }
+            SelectNumPageList.Clear();
+            PageListExtract("");
+            ListNumRefresh();
+            
             if (MainWindowViewModel.ImageListViewModel.BoolSelectImageView)
             {
                 MainWindowViewModel.IsEnabled = false;
                 MainWindowViewModel.ProgressLoadingViewModel.Visibility = System.Windows.Visibility.Visible;
-
+                MainWindowViewModel.ImageListViewModel.MakeThumbnailandList(MainWindowViewModel.ImageListViewModel.LoadImageListCurrent);
                 Application.Current.Dispatcher.BeginInvoke(new ThreadStart(() =>
                 {
-                    MainWindowViewModel.ImageListViewModel.MakeThumbnailandList(MainWindowViewModel.ImageListViewModel.LoadImageListCurrent);
+                    
                 }));                
 
             }

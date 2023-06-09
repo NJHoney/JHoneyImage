@@ -29,6 +29,7 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.CodeDom;
+using static System.Net.WebRequestMethods;
 
 namespace JHoney_ImageConverter.ViewModel
 {
@@ -64,8 +65,13 @@ namespace JHoney_ImageConverter.ViewModel
             set { _isAutoClearOn = value; OnPropertyChanged("IsAutoClearOn"); }
         }
         private bool _isAutoClearOn = false;
-
-
+        public bool IsWhiteLabelOn
+        {
+            get { return _isWhiteLabelOn; }
+            set { _isWhiteLabelOn = value; OnPropertyChanged("IsWhiteLabelOn"); }
+        }
+        private bool _isWhiteLabelOn = false;
+        
         #region 프로퍼티
 
         #region ---［ OpenCV ］---------------------------------------------------------------------
@@ -233,7 +239,13 @@ namespace JHoney_ImageConverter.ViewModel
         private Polyline polyline = new Polyline();
         private bool drawOnMove = false;
 
+        private System.Windows.Point startPoint =new System.Windows.Point();
         private bool IsPolygonMode = false;
+        private bool IsFirstTime = true;
+        private Ellipse baseEllipse = new Ellipse(); 
+        private Line temppolyline = new Line();
+        private PointCollection polyPoints = new PointCollection();
+        private bool IsPolygonSolidMode = false;
         #endregion
         #region Rectangle
         public Rectangle rectline = new Rectangle();
@@ -306,7 +318,8 @@ namespace JHoney_ImageConverter.ViewModel
                     InkCanvasInfo.EditingMode = InkCanvasEditingMode.EraseByPoint;
                 }
                 InkCanvasInfo.DefaultDrawingAttributes.Width = value; InkCanvasInfo.DefaultDrawingAttributes.Height = value;
-
+                rectline.StrokeThickness = PenThickness;
+                polyline.StrokeThickness = PenThickness;
                 OnPropertyChanged("PenThickness");
             }
         }
@@ -364,6 +377,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         public RelayCommand<object> CommandSaveLabelImage { get; private set; }
         public RelayCommand<object> CommandSaveRectToJson { get; private set; }
+        public RelayCommand<object> CommandSaveRectToYolov8Txt { get; private set; }
         public RelayCommand<object> CommandLoadRectToJson { get; private set; }
 
         public RelayCommand<object> CommandSetSavePath { get; private set; }
@@ -421,6 +435,7 @@ namespace JHoney_ImageConverter.ViewModel
             CommandSelectEditingMode = new RelayCommand<object>((param) => OnCommandSelectEditingMode(param));
             CommandSaveLabelImage = new RelayCommand<object>((param) => OnCommandSaveLabelImage(param));
             CommandSaveRectToJson = new RelayCommand<object>((param) => OnCommandSaveRectToJson(param));
+            CommandSaveRectToYolov8Txt = new RelayCommand<object>((param)=> OnCommandSaveRectToYolov8Txt(param));
             CommandLoadRectToJson = new RelayCommand<object>((param) => OnCommandLoadRectToJson(param));
             CommandSetSavePath = new RelayCommand<object>((param) => OnCommandSetSavePath(param));
 
@@ -428,6 +443,7 @@ namespace JHoney_ImageConverter.ViewModel
             CanvasKeyDown = new RelayCommand<KeyEventArgs>((e) => OnCanvasKeyDown(e));
         }
 
+       
 
         void InitEvent()
         {
@@ -494,7 +510,7 @@ namespace JHoney_ImageConverter.ViewModel
                     return;
                 }
 
-                File.Copy(file[0], tempImg, true);
+                System.IO.File.Copy(file[0], tempImg, true);
                 UpdateImageInfo(file[0]);
 
                 ImageShow.ImageSourceUpdate(tempImg, "ImageBrush");
@@ -615,7 +631,7 @@ namespace JHoney_ImageConverter.ViewModel
                         el.Height = 10;
                         el.Stroke = Brushes.Black;
                         el.StrokeThickness = 2;
-                        if (IsFillOn) { el.Fill = new SolidColorBrush { Color = Colors.Yellow }; }
+                        el.Fill = new SolidColorBrush { Color = Colors.Yellow };
 
                         el.Margin =
                             new Thickness(left: polyline.Points[0].X - el.Width / 2, top: polyline.Points[0].Y - el.Height / 2, right: 0, bottom: 0);
@@ -625,6 +641,58 @@ namespace JHoney_ImageConverter.ViewModel
                     drawOnMove = true;
                 }
             }
+
+            if (IsPolygonSolidMode)
+            {
+                
+                if (IsFirstTime)
+                {
+                    startPoint = e.GetPosition(InkCanvasInfo);
+                    polyPoints.Clear();
+                    polyPoints.Add(startPoint);
+                    baseEllipse = new Ellipse
+                    {
+                        Width = 10,
+                        Height = 10,
+                        Fill = new SolidColorBrush { Color = Colors.Yellow }
+                };
+                    InkCanvas.SetLeft(baseEllipse, startPoint.X-5);
+                    InkCanvas.SetTop(baseEllipse, startPoint.Y-5);
+                    InkCanvasInfo.Children.Add(baseEllipse);
+
+                    temppolyline = new Line
+                    {
+                        X1 = startPoint.X,
+                        Y1 = startPoint.Y,
+                        X2 = startPoint.X,
+                        Y2 = startPoint.Y,
+                        Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString()),
+                        StrokeThickness = PenThickness,
+                        //StrokeDashArray = new DoubleCollection(new double[] { 2, 2 })
+                    };
+
+                    InkCanvasInfo.Children.Add(temppolyline);
+                    IsFirstTime = false;
+                }
+                else
+                {
+                    polyPoints.Add(e.GetPosition(InkCanvasInfo));
+                    startPoint = e.GetPosition(InkCanvasInfo);
+                    temppolyline = new Line
+                    {
+                        X1 = startPoint.X,
+                        Y1 = startPoint.Y,
+                        X2 = startPoint.X,
+                        Y2 = startPoint.Y,
+                        Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString()),
+                        StrokeThickness = PenThickness,
+                        //StrokeDashArray = new DoubleCollection(new double[] { 2, 2 })
+                    };
+                    InkCanvasInfo.Children.Add(temppolyline);
+                }
+
+            }
+
             if (IsRectangleMode)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
@@ -640,7 +708,7 @@ namespace JHoney_ImageConverter.ViewModel
                             (int)Convert.ToDouble(e.GetPosition(InkCanvasInfo).Y) > (int)Convert.ToDouble(InkCanvasInfo.ActualHeight * (96 / ImageShow.ImageBrush_YDPI)))
                         {
                             IsStartRect = false;
-
+                            rectline.Visibility = Visibility.Visible;
                         }
                         else
                         {
@@ -839,7 +907,53 @@ namespace JHoney_ImageConverter.ViewModel
 
             }
 
-            if (IsRectangleMode)
+            if (IsPolygonSolidMode)
+            {
+                if (!IsFirstTime)
+                {
+                    temppolyline.X2 = CurrentMousePoint.X;
+                    temppolyline.Y2 = CurrentMousePoint.Y;
+                    
+                }
+                if (e.OriginalSource is Ellipse)
+                {
+                    if ((e.OriginalSource as Ellipse).Tag != null)
+                    {
+                        return;
+                    }
+                    if(polyPoints.Count<3)
+                    { return; }
+                    polyPoints.Add(e.GetPosition(InkCanvasInfo));
+                    InkCanvasInfo.Children.Remove((Ellipse)e.OriginalSource);
+                    //InkCanvasInfo.Children.Remove(polyline);
+                    Polygon tmpPolygon = new Polygon();
+                    tmpPolygon.StrokeThickness = PenThickness;
+                    tmpPolygon.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString());
+                    tmpPolygon.Points = polyPoints.Clone();
+
+                    InkCanvasInfo.EditingMode = InkCanvasEditingMode.None;
+                    //polyline = new Polyline();
+                    //polyline.Points = new PointCollection();
+                    //polyline.StrokeThickness = PenThickness;
+                    //polyline.Stroke = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString());
+                    //InkCanvasInfo.Children.Add(polyline);
+
+                    if (IsFillOn) { tmpPolygon.Fill = (SolidColorBrush)new BrushConverter().ConvertFromString(MainWindowViewModel.SelectedColor.ToString()); }
+                    adjustPolygonXY(tmpPolygon);
+                    tmpPolygon.Tag = Guid.NewGuid().ToString();
+                    tmpPolygon.Measure(new System.Windows.Size(double.PositiveInfinity, double.PositiveInfinity));
+                    tmpPolygon.Arrange(new System.Windows.Rect(tmpPolygon.DesiredSize));
+
+                    InkCanvasInfo.Children.Add(tmpPolygon);
+                    ShapeList.Add(new ShapeListModel() { Shape = CopyShape(tmpPolygon as Polygon), Point = new System.Windows.Point(InkCanvas.GetLeft(tmpPolygon), InkCanvas.GetTop(tmpPolygon)), uuid = tmpPolygon.Tag.ToString(), Width = tmpPolygon.ActualWidth, Height = tmpPolygon.ActualHeight });
+                    polyPoints.Clear();
+                    removeNullChild();
+                    IsFirstTime = true;
+                }
+
+            }
+
+                if (IsRectangleMode)
             {
 
                 CurrentMousePoint = e.GetPosition(InkCanvasInfo);
@@ -1038,7 +1152,7 @@ namespace JHoney_ImageConverter.ViewModel
 
         System.Windows.Point DPICacl(System.Windows.Point InputPoint)
         {
-            System.Windows.Point DPICalcPoint = new System.Windows.Point(InputPoint.X * ImageShow.ImageBrush_XDPI / 96, InputPoint.Y * ImageShow.ImageBrush_YDPI / 96);
+            System.Windows.Point DPICalcPoint = new System.Windows.Point(InputPoint.X * ImageShow.ImageBrush_XDPI/ 96 , InputPoint.Y * ImageShow.ImageBrush_YDPI / 96);
             return DPICalcPoint;
         }
         int DPICaclSingle(double Param)
@@ -1071,7 +1185,7 @@ namespace JHoney_ImageConverter.ViewModel
             IsPolygonMode = false;
             drawOnMove = false;
             polyline.Points.Clear();
-            IsPolygonMode = IsRectangleMode = IsStartRect = IsEllipseMode = false;
+            IsPolygonMode = IsPolygonSolidMode = IsRectangleMode = IsStartRect = IsEllipseMode = false;
             rectline.Visibility = Visibility.Collapsed;
             ellipseline.Visibility = Visibility.Collapsed;
 
@@ -1115,6 +1229,11 @@ namespace JHoney_ImageConverter.ViewModel
                 IsPolygonMode = true;
                 InkCanvasInfo.EditingMode = InkCanvasEditingMode.None;
             }
+            if (param.ToString() == "PolygonSolid")
+            {
+                IsPolygonSolidMode = IsFirstTime = true;
+                InkCanvasInfo.EditingMode = InkCanvasEditingMode.None;
+            }
         }
         public void UpdateColor()
         {
@@ -1149,6 +1268,37 @@ namespace JHoney_ImageConverter.ViewModel
 
 
         }
+        
+        private void SaveLabelImage(string saveName)
+        {
+            Thread.Sleep(10);
+
+            System.Windows.Rect bounds = new System.Windows.Rect(0,0, InkCanvasInfo.ActualWidth,InkCanvasInfo.ActualHeight);
+            double dpi = 96d;
+
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)Math.Round(bounds.Width), (int)Math.Round(bounds.Height), dpi, dpi, System.Windows.Media.PixelFormats.Default);
+            DrawingVisual dv = new DrawingVisual();
+            using (DrawingContext dc = dv.RenderOpen())
+            {
+                VisualBrush vb = new VisualBrush(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
+                dc.DrawRectangle(vb, null, new System.Windows.Rect(new System.Windows.Point(), bounds.Size));
+            }
+            rtb.Render(dv);
+
+            BitmapEncoder pngEncoder = new PngBitmapEncoder();
+            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+            {
+                pngEncoder.Save(ms);
+                System.IO.File.WriteAllBytes(saveName, ms.ToArray());
+                Mat tempMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(new System.Drawing.Bitmap(ms));
+                Mat[] tempMatChannel = tempMat.Split();
+                Cv2.Threshold(tempMatChannel[3], tempMatChannel[3], 1, 255, ThresholdTypes.Binary);
+                tempMatChannel[3] = ~tempMatChannel[3];
+                tempMatChannel[3].SaveImage(saveName);
+                tempMat.Dispose();
+            }
+        }
         private void OnCommandSaveLabelImage(object param)
         {
             var preMode = InkCanvasInfo.EditingMode;
@@ -1164,35 +1314,7 @@ namespace JHoney_ImageConverter.ViewModel
                 {
                     if (Dialog.FileName != "")
                     {
-
-
-                        Thread.Sleep(10);
-
-                        System.Windows.Rect bounds = VisualTreeHelper.GetDescendantBounds(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
-                        double dpi = 96d;
-
-                        RenderTargetBitmap rtb = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
-                        DrawingVisual dv = new DrawingVisual();
-                        using (DrawingContext dc = dv.RenderOpen())
-                        {
-                            VisualBrush vb = new VisualBrush(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
-                            dc.DrawRectangle(vb, null, new System.Windows.Rect(new System.Windows.Point(), bounds.Size));
-                        }
-                        rtb.Render(dv);
-
-                        BitmapEncoder pngEncoder = new PngBitmapEncoder();
-                        pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-                        using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-                        {
-                            pngEncoder.Save(ms);
-                            System.IO.File.WriteAllBytes(Dialog.FileName, ms.ToArray());
-                            Mat tempMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(new System.Drawing.Bitmap(ms));
-                            Mat[] tempMatChannel = tempMat.Split();
-                            Cv2.Threshold(tempMatChannel[3], tempMatChannel[3], 1, 255, ThresholdTypes.Binary);
-                            tempMatChannel[3] = ~tempMatChannel[3];
-                            tempMatChannel[3].SaveImage(Dialog.FileName);
-                            tempMat.Dispose();
-                        }
+                        SaveLabelImage(Dialog.FileName);
                     }
                 }
             }
@@ -1200,38 +1322,43 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 string savePath = TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_Safe;
 
-                if(File.Exists(savePath))
+                if(System.IO.File.Exists(savePath))
                 {
                     savePath = TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + "_label." + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_Extension;
                 }
+                SaveLabelImage(savePath);
+                //Thread.Sleep(10);
 
-                Thread.Sleep(10);
+                //System.Windows.Rect bounds = VisualTreeHelper.GetDescendantBounds(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
+                //double dpi = 96d;
 
-                System.Windows.Rect bounds = VisualTreeHelper.GetDescendantBounds(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
-                double dpi = 96d;
+                //double scaleX = _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.ActualWidth / bounds.Width;
+                //double scaleY = _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.ActualHeight / bounds.Height;
+                //System.Windows.Size canvasSize = new System.Windows.Size(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.ActualWidth, _mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo.ActualHeight);
 
-                RenderTargetBitmap rtb = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
-                DrawingVisual dv = new DrawingVisual();
-                using (DrawingContext dc = dv.RenderOpen())
-                {
-                    VisualBrush vb = new VisualBrush(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
-                    dc.DrawRectangle(vb, null, new System.Windows.Rect(new System.Windows.Point(), bounds.Size));
-                }
-                rtb.Render(dv);
+                //RenderTargetBitmap rtb = new RenderTargetBitmap((int)canvasSize.Width, (int)canvasSize.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
+                //DrawingVisual dv = new DrawingVisual();
+                //using (DrawingContext dc = dv.RenderOpen())
+                //{
+                //    VisualBrush vb = new VisualBrush(_mainWindowViewModel.SegmentationLabelViewModel.InkCanvasInfo);
+                //    dc.PushTransform(new ScaleTransform(scaleX, scaleY));
+                //    dc.DrawRectangle(vb, null, new System.Windows.Rect(new System.Windows.Point(), bounds.Size));
+                //}
+                //rtb.Render(dv);
 
-                BitmapEncoder pngEncoder = new PngBitmapEncoder();
-                pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-                using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
-                {
-                    pngEncoder.Save(ms);
-                    System.IO.File.WriteAllBytes(savePath, ms.ToArray());
-                    Mat tempMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(new System.Drawing.Bitmap(ms));
-                    Mat[] tempMatChannel = tempMat.Split();
-                    Cv2.Threshold(tempMatChannel[3], tempMatChannel[3], 1, 255, ThresholdTypes.Binary);
-                    tempMatChannel[3] = ~tempMatChannel[3];
-                    tempMatChannel[3].SaveImage(savePath);
-                    tempMat.Dispose();
-                }
+                //BitmapEncoder pngEncoder = new PngBitmapEncoder();
+                //pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
+                //using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                //{
+                //    pngEncoder.Save(ms);
+                //    System.IO.File.WriteAllBytes(savePath, ms.ToArray());
+                //    Mat tempMat = OpenCvSharp.Extensions.BitmapConverter.ToMat(new System.Drawing.Bitmap(ms));
+                //    Mat[] tempMatChannel = tempMat.Split();
+                //    Cv2.Threshold(tempMatChannel[3], tempMatChannel[3], 1, 255, ThresholdTypes.Binary);
+                //    tempMatChannel[3] = ~tempMatChannel[3];
+                //    tempMatChannel[3].SaveImage(savePath);
+                //    tempMat.Dispose();
+                //}
             }
 
 
@@ -1257,8 +1384,13 @@ namespace JHoney_ImageConverter.ViewModel
                             var transform = InkCanvasInfo.Children[childIndex].TransformToAncestor(InkCanvasInfo);
                             System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
                             var rectinfo = new[] { position.X.ToString(), position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
+
+
+                            //label x y width height
+                            //0 0.3466 0.2933 0.261230 0.35666
+
                             json.Add("Rect" + (childIndex - 2), JArray.FromObject(rectinfo));
-                            File.WriteAllText(Dialog.FileName, json.ToString());
+                            System.IO.File.WriteAllText(Dialog.FileName, json.ToString());
                         }
                     }
                 }
@@ -1273,20 +1405,73 @@ namespace JHoney_ImageConverter.ViewModel
                     System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
                     var rectinfo = new[] { position.X.ToString(), position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
                     json.Add("Rect" + (childIndex - 2), JArray.FromObject(rectinfo));
-                    File.WriteAllText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json", json.ToString());
+                    System.IO.File.WriteAllText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json", json.ToString());
                 }
 
             }
 
         }
+
+        private void OnCommandSaveRectToYolov8Txt(object param)
+        {
+            if (TxtSaveFilePath == "")
+            {
+                Microsoft.Win32.SaveFileDialog Dialog = new Microsoft.Win32.SaveFileDialog();
+                Dialog.DefaultExt = ".txt";
+                Dialog.Filter = "JSon File (*.json)|*.json|All Files (*.*)|*.*";
+                bool? result = Dialog.ShowDialog();
+
+                string labelContent = "";
+                if (result == true)
+                {
+                    if (Dialog.FileName != "")
+                    {
+                        for (int childIndex = 2; childIndex < InkCanvasInfo.Children.Count; childIndex++)
+                        {
+                            if (InkCanvasInfo.Children[childIndex].GetType() != typeof(Rectangle)) { continue; }
+                            var transform = InkCanvasInfo.Children[childIndex].TransformToAncestor(InkCanvasInfo);
+                            System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
+                            var rectinfo = new[] { position.X.ToString(), position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
+
+                            labelContent += "0";
+                            labelContent += " " + ((position.X + ((InkCanvasInfo.Children[childIndex] as Rectangle).ActualWidth)/2)) /InkCanvasInfo.ActualWidth;
+                            labelContent += " " + ((position.Y + ((InkCanvasInfo.Children[childIndex] as Rectangle).ActualHeight)/2)) / InkCanvasInfo.ActualHeight;
+                            labelContent += " " + (InkCanvasInfo.Children[childIndex] as Rectangle).Width / InkCanvasInfo.ActualWidth;
+                            labelContent += " " + (InkCanvasInfo.Children[childIndex] as Rectangle).Height / InkCanvasInfo.ActualHeight + "\n";
+                            //label center-x center-y width height
+                            //0 0.3466 0.2933 0.261230 0.35666
+
+                            
+                            
+                        }
+                        System.IO.File.WriteAllText(Dialog.FileName, labelContent);
+                    }
+                }
+            }
+            else
+            {
+                var json = new JObject();
+                for (int childIndex = 2; childIndex < InkCanvasInfo.Children.Count; childIndex++)
+                {
+                    if (InkCanvasInfo.Children[childIndex].GetType() != typeof(Rectangle)) { continue; }
+                    var transform = InkCanvasInfo.Children[childIndex].TransformToAncestor(InkCanvasInfo);
+                    System.Windows.Point position = transform.Transform(new System.Windows.Point(0, 0));
+                    var rectinfo = new[] { position.X.ToString(), position.Y.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Width.ToString(), (InkCanvasInfo.Children[childIndex] as Rectangle).Height.ToString() };
+                    json.Add("Rect" + (childIndex - 2), JArray.FromObject(rectinfo));
+                    System.IO.File.WriteAllText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json", json.ToString());
+                }
+
+            }
+        }
+
         private void OnCommandLoadRectToJson(object param)
         {
             JObject json = new JObject();
             if (TxtSaveFilePath != "")
             {
-                if (File.Exists(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
+                if (System.IO.File.Exists(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
                 {
-                    using (StreamReader file = File.OpenText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
+                    using (StreamReader file = System.IO.File.OpenText(TxtSaveFilePath + "\\" + _mainWindowViewModel.ImageListViewModel.LastSelectedItem.FileName_OnlyName + ".json"))
                     using (JsonTextReader reader = new JsonTextReader(file))
                     {
                         json = (JObject)JToken.ReadFrom(reader);
@@ -1315,7 +1500,7 @@ namespace JHoney_ImageConverter.ViewModel
             {
                 if (Dialog.FileName != "")
                 {
-                    using (StreamReader file = File.OpenText(Dialog.FileName))
+                    using (StreamReader file = System.IO.File.OpenText(Dialog.FileName))
                     using (JsonTextReader reader = new JsonTextReader(file))
                     {
                         json = (JObject)JToken.ReadFrom(reader);

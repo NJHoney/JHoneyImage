@@ -81,7 +81,7 @@
                 <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" Margin="5">
                     <Button Content="Save Image" Margin="5" Command="{Binding CommandSaveLabelImage}" />
                     <Button Content="Save JSON" Margin="5" Command="{Binding CommandSaveRectToJson}" />
-                    <!--<Button Content="Load Image" Margin="5" IsEnabled="False" />-->
+                    <Button Content="Save TXT(Yolov8)" Margin="5" Command="{Binding CommandSaveRectToYolov8Txt}" />
                     <Button Content="Load JSON" Margin="5" Command="{Binding CommandLoadRectToJson}" />
                 </StackPanel>
 
@@ -109,6 +109,7 @@
                     <Controls:NumericUpDown Value="{Binding PenThickness}" Minimum="1" Margin="2" VerticalAlignment="Center" Controls:TextBoxHelper.Watermark="Thickness" Controls:TextBoxHelper.UseFloatingWatermark="True" />
                     <Controls:ToggleSwitch Header="Fill" IsOn="{Binding IsFillOn}" VerticalAlignment="Center" />
                     <Controls:ToggleSwitch Header="AutoClear" IsOn="{Binding IsAutoClearOn}" VerticalAlignment="Center" />
+                    <Controls:ToggleSwitch Header="WhiteLabel" IsOn="{Binding IsWhiteLabelOn}" VerticalAlignment="Center" />
                     <RadioButton Style="{StaticResource CustomRadioButton}" BorderBrush="Black" Width="40" Height="40" Command="{Binding CommandSelectEditingMode}" CommandParameter="Select" Margin="2" IsChecked="True">
                         <iconPacks:PackIconFontAwesome Kind="HandPointerRegular" />
                     </RadioButton>
@@ -126,6 +127,9 @@
                     </RadioButton>
                     <RadioButton Style="{StaticResource CustomRadioButton}" BorderBrush="Black" Width="40" Height="40" Command="{Binding CommandSelectEditingMode}" CommandParameter="Ellipse" Margin="2">
                         <iconPacks:PackIconUnicons Kind="Circle" />
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource CustomRadioButton}" BorderBrush="Black" Width="40" Height="40" Command="{Binding CommandSelectEditingMode}" CommandParameter="PolygonSolid" Margin="2">
+                        <iconPacks:PackIconFontAwesome Kind="DrawPolygonSolid" />
                     </RadioButton>
                     <RadioButton Style="{StaticResource CustomRadioButton}" BorderBrush="Black" Width="40" Height="40" Command="{Binding CommandSelectEditingMode}" CommandParameter="Polygon" Margin="2">
                         <iconPacks:PackIconBoxIcons Kind="RegularShapePolygon" />
